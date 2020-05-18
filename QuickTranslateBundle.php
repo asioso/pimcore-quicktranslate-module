@@ -8,13 +8,18 @@
  *
  */
 
-namespace asioso\QuickTranslateBundle;
+namespace QuickTranslateBundle;
 
+use PackageVersions\Versions;
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
 use Pimcore\Extension\Bundle\PimcoreBundleInterface;
 
 class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundleInterface
 {
+
+    use PackageVersionTrait;
+    const PACKAGE_NAME = 'asioso/pimcore-quicktranslate-module';
+
     public function getJsPaths()
     {
         return [
@@ -78,13 +83,25 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
         return "";
     }
 
-    public function getVersion()
-    {
-        return 'v1.0';
+
+    public static function getSolutionVersion(){
+        //code duplication from PackageVersionTrait... sorry
+        $version = Versions::getVersion(self::PACKAGE_NAME);
+
+        // normalizes v2.3.0@9e016f4898c464f5c895c17993416c551f1697d3 to 2.3.0
+        $version = preg_replace('/^v/', '', $version);
+        $version = preg_replace('/@(.+)$/', '', $version);
+
+        return $version;
     }
 
-    public static function getSolutionVersion()
+    /**
+     * Returns the composer package name used to resolve the version
+     *
+     * @return string
+     */
+    protected function getComposerPackageName(): string
     {
-        return "v1.0";
+        return self::PACKAGE_NAME;
     }
 }
