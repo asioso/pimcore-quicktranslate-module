@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * @link http://symfony.com/doc/current/cookbook/bundles/extension.html
  */
-class quickTranslateExtension extends Extension
+class QuickTranslateExtension extends Extension
 {
     /**
      * {@inheritdoc}
