@@ -1,0 +1,11 @@
+.quick-translate-icon {
+    background: url(/bundles/asiosoquicktranslate/img/btn/quick_translate_25x25.png) center center no-repeat;
+}
+
+.quickTranslate-translate-btn {
+    background-color: #93bd32;
+    color: #fff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}

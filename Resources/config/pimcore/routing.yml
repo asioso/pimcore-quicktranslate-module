@@ -1,0 +1,24 @@
+asioso_quick_translate_object:
+    path:     /asioso_quick_translate_object
+    defaults: { _controller: asiosoQuickTranslateBundle:Object:translateObject }
+
+asioso_quick_translate_document:
+    path:     /asioso_quick_translate_document
+    defaults: { _controller: asiosoQuickTranslateBundle:Document:saveDocument }
+
+asioso_quick_translate_brick:
+    path:     /asioso_quick_translate_brick
+    defaults: { _controller: asiosoQuickTranslateBundle:Document:saveBrick }
+
+asioso_quick_translate_get_document_elements:
+    path:     /asioso_quick_translate_get_document_elements
+    defaults: { _controller: asiosoQuickTranslateBundle:Document:getDocumentElements }
+
+asioso_quick_translate_check_if_exists:
+    path:     /asioso_quick_translate_check_if_exists
+    defaults: { _controller: asiosoQuickTranslateBundle:Document:checkIfExists }
+
+asioso_quick_translate_get_auth_key:
+    path:     /asioso_quick_translate_get_auth_key
+    defaults: { _controller: asiosoQuickTranslateBundle:Default:getAuthKey }
+
