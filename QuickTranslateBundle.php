@@ -11,8 +11,9 @@
 namespace asioso\QuickTranslateBundle;
 
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
+use Pimcore\Extension\Bundle\PimcoreBundleInterface;
 
-class QuickTranslateBundle extends AbstractPimcoreBundle
+class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundleInterface
 {
     public function getJsPaths()
     {
@@ -59,5 +60,31 @@ class QuickTranslateBundle extends AbstractPimcoreBundle
         return [
             '/bundles/quicktranslate/css/quick-translate.css'
         ];
+    }
+
+
+    public function getNiceName()
+    {
+        return 'Asioso - QuickTranslate Bundle';
+    }
+
+    /**
+     * Bundle description as shown in extension manager
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return "";
+    }
+
+    public function getVersion()
+    {
+        return 'v1.0';
+    }
+
+    public static function getSolutionVersion()
+    {
+        return "v1.0";
     }
 }
