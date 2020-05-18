@@ -1,4 +1,12 @@
 <?php
+/**
+ * This source file is available under  GNU General Public License version 3 (GPLv3)
+ *
+ * Full copyright and license information is available in LICENSE.md which is distributed with this source code.
+ *
+ *  @copyright  Copyright (c) Asioso GmbH (https://www.asioso.com)
+ *
+ */
 
 namespace asioso\QuickTranslateBundle\DependencyInjection;
 
@@ -12,7 +20,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * @link http://symfony.com/doc/current/cookbook/bundles/extension.html
  */
-class asiosoQuickTranslateExtension extends Extension
+class quickTranslateExtension extends Extension
 {
     /**
      * {@inheritdoc}

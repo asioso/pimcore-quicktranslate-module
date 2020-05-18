@@ -2,14 +2,14 @@
   "name": "asioso/pimcore-quicktranslate-module",
   "type": "pimcore-bundle",
   "license": "GPL-3.0-or-later",
-  "description": "A bundle to help translating with DeepL",
+  "description": "A bundle to help translating things with DeepL",
   "keywords": [
     "pimcore",
     "pimcore-plugin",
     "marketplace",
     "e-commerce",
     "translation",
-    "xliff2.0"
+    "deepL"
 
   ],
   "homepage": "https://www.asioso.com",
