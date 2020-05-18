@@ -13,6 +13,7 @@ namespace QuickTranslateBundle;
 use PackageVersions\Versions;
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
 use Pimcore\Extension\Bundle\PimcoreBundleInterface;
+use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;
 
 class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundleInterface
 {
