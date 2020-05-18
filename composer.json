@@ -33,7 +33,7 @@
   },
   "autoload": {
     "psr-4": {
-      "QuickTranslateBundle\\": "src/QuickTranslateBundle"
+      "QuickTranslateBundle\\": "./"
     }
   },
   "extra": {
