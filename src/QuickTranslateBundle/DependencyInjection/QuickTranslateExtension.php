@@ -8,7 +8,7 @@
  *
  */
 
-namespace AsiosoQuickTranslateBundle\DependencyInjection;
+namespace Asioso\QuickTranslateBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

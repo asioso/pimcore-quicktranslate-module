@@ -8,7 +8,7 @@
  *
  */
 
-namespace AsiosoQuickTranslateBundle\DependencyInjection;
+namespace Asioso\QuickTranslateBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
