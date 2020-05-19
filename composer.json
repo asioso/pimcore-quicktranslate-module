@@ -33,13 +33,13 @@
   },
   "autoload": {
     "psr-4": {
-      "QuickTranslateBundle\\": "./"
+      "AsiosoQuickTranslateBundle\\": "./src/AsiosoQuickTranslateBundle/"
     }
   },
   "extra": {
     "pimcore": {
       "bundles": [
-        "QuickTranslateBundle\\QuickTranslateBundle"
+        "AsiosoQuickTranslateBundle\\AsiosoQuickTranslateBundle"
       ]
     }
   }

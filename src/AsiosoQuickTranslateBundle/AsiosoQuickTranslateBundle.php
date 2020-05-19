@@ -8,14 +8,14 @@
  *
  */
 
-namespace QuickTranslateBundle;
+namespace AsiosoQuickTranslateBundle;
 
 use PackageVersions\Versions;
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
 use Pimcore\Extension\Bundle\PimcoreBundleInterface;
 use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;
 
-class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundleInterface
+class AsiosoQuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundleInterface
 {
 
     use PackageVersionTrait;
@@ -24,17 +24,17 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
     public function getJsPaths()
     {
         return [
-            '/bundles/quicktranslate/js/pimcore/startup.js',
-            '/bundles/quicktranslate/js/quick-translate-btn/quickTranslateObjectBtn.js',
-            '/bundles/quicktranslate/js/quick-translate-btn/quickTranslateDocument.js',
-            '/bundles/quicktranslate/js/quick-translate-api/quickTranslate.js',
-            '/bundles/quicktranslate/js/utilities/xml2json.js',
-            '/bundles/quicktranslate/js/utilities/quickTranslateWindow.js',
-            '/bundles/quicktranslate/js/utilities/xmlRegReplace.js',
-            '/bundles/quicktranslate/js/utilities/progressBar.js',
-            '/bundles/quicktranslate/js/utilities/createDeeplApiUrl.js',
-            '/bundles/quicktranslate/js/utilities/isDeeplLanguage.js',
-            '/bundles/quicktranslate/js/utilities/reloadDocument.js',
+            '/bundles/asiosoquicktranslate/js/pimcore/startup.js',
+            '/bundles/asiosoquicktranslate/js/quick-translate-btn/quickTranslateObjectBtn.js',
+            '/bundles/asiosoquicktranslate/js/quick-translate-btn/quickTranslateDocument.js',
+            '/bundles/asiosoquicktranslate/js/quick-translate-api/quickTranslate.js',
+            '/bundles/asiosoquicktranslate/js/utilities/xml2json.js',
+            '/bundles/asiosoquicktranslate/js/utilities/quickTranslateWindow.js',
+            '/bundles/asiosoquicktranslate/js/utilities/xmlRegReplace.js',
+            '/bundles/asiosoquicktranslate/js/utilities/progressBar.js',
+            '/bundles/asiosoquicktranslate/js/utilities/createDeeplApiUrl.js',
+            '/bundles/asiosoquicktranslate/js/utilities/isDeeplLanguage.js',
+            '/bundles/asiosoquicktranslate/js/utilities/reloadDocument.js',
         ];
     }
 
@@ -42,14 +42,14 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
     {
 
         return [
-            '/bundles/quicktranslate/js/quick-translate-btn/areablock.js',
-            '/bundles/quicktranslate/js/utilities/xml2json.js',
-            '/bundles/quicktranslate/js/utilities/quickTranslateWindow.js',
-            '/bundles/quicktranslate/js/utilities/xmlRegReplace.js',
-            '/bundles/quicktranslate/js/utilities/progressBar.js',
-            '/bundles/quicktranslate/js/utilities/createDeeplApiUrl.js',
-            '/bundles/quicktranslate/js/utilities/reloadDocument.js',
-            '/bundles/quicktranslate/js/utilities/isDeeplLanguage.js',
+            '/bundles/asiosoquicktranslate/js/quick-translate-btn/areablock.js',
+            '/bundles/asiosoquicktranslate/js/utilities/xml2json.js',
+            '/bundles/asiosoquicktranslate/js/utilities/quickTranslateWindow.js',
+            '/bundles/asiosoquicktranslate/js/utilities/xmlRegReplace.js',
+            '/bundles/asiosoquicktranslate/js/utilities/progressBar.js',
+            '/bundles/asiosoquicktranslate/js/utilities/createDeeplApiUrl.js',
+            '/bundles/asiosoquicktranslate/js/utilities/reloadDocument.js',
+            '/bundles/asiosoquicktranslate/js/utilities/isDeeplLanguage.js',
         ];
 
     }
@@ -57,14 +57,14 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
     public function getEditmodeCssPaths()
     {
         return [
-            '/bundles/quicktranslate/css/quick-translate.css'
+            '/bundles/asiosoquicktranslate/css/quick-translate.css'
         ];
     }
 
     public function getCssPaths()
     {
         return [
-            '/bundles/quicktranslate/css/quick-translate.css'
+            '/bundles/asiosoquicktranslate/css/quick-translate.css'
         ];
     }
 

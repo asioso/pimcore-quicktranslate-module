@@ -8,7 +8,7 @@
  *
  */
 
-namespace QuickTranslateBundle\Controller;
+namespace AsiosoQuickTranslateBundle\Controller;
 
 use Pimcore\Controller\FrontendController;
 use Pimcore\Db;
