@@ -6,7 +6,7 @@ With this Bundle you can automatically translate your content via DeepL Interfac
 * PHP 7.1 or higher (https://secure.php.net/)
 * Composer (https://getcomposer.org/download/)
 * A Pimcore  Installation (v5 or higher)
-* deepL account
+* DeepL account
 
 
 ## Installation
