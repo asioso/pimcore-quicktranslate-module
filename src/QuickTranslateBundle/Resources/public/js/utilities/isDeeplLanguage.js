@@ -21,6 +21,8 @@ function isDeeplLanguage(lang) {
         "nl",
         "pl",
         "ru",
+        "ja",
+        "zh"
     ];
 
 
