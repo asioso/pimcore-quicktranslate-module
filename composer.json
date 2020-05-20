@@ -2,7 +2,7 @@
   "name": "asioso/pimcore-quicktranslate-module",
   "type": "pimcore-bundle",
   "license": "GPL-3.0-or-later",
-  "description": "A bundle to help translating things with DeepL",
+  "description": "With this Bundle you can automatically translate your content via DeepL Interface.",
   "keywords": [
     "pimcore",
     "pimcore-plugin",
