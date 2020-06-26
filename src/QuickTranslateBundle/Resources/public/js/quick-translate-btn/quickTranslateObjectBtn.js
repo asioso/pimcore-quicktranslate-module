@@ -13,17 +13,6 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
     initialize: function (element) {
 
         this.element = element;
-        this.deeplLanguages = [
-            "en",
-            "de",
-            "fr",
-            "es",
-            "pt",
-            "it",
-            "nl",
-            "pl",
-            "ru",
-        ];
 
     },
 
