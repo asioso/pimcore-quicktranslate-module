@@ -34,10 +34,10 @@ class ObjectController extends FrontendController
 
             $item->save();
 
-            JsonResponse::create("true")->send();
+            return JsonResponse::create("true");
 
         } catch (\Exception $e) {
-            JsonResponse::create("false")->send();
+            return JsonResponse::create("false");
         }
 
     }

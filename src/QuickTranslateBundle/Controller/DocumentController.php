@@ -36,9 +36,9 @@ class DocumentController extends FrontendController
             $exists = false;
         }
 
-        JsonResponse::create([
+        return JsonResponse::create([
             "exists" => $exists
-        ])->send();
+        ]);
 
     }
 
@@ -56,13 +56,13 @@ class DocumentController extends FrontendController
             $id = $document->getContentMasterDocumentId() != null ? $document->getContentMasterDocumentId() : $document->getId();
 
             $brickName = $request->get("brickName");
-            $elems = $db->fetchAll("SELECT name, type, data 
-                                        FROM documents_elements 
+            $elems = $db->fetchAll("SELECT name, type, data
+                                        FROM documents_elements
                                         WHERE documentId=" . $document->getId() . " AND (type='input' OR type='textarea' OR type='wysiwyg') AND name LIKE '" . $brickName . "%'");
 
             if ($elems == null && $document->getContentMasterDocumentId() != null) {
-                $elems = $db->fetchAll("SELECT name, type, data 
-                                        FROM documents_elements 
+                $elems = $db->fetchAll("SELECT name, type, data
+                                        FROM documents_elements
                                         WHERE documentId=" . $document->getContentMasterDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg') AND name LIKE '" . $brickName . "%'");
             }
 
@@ -71,13 +71,13 @@ class DocumentController extends FrontendController
 
         } else {
 
-            $elems = $db->fetchAll("SELECT name, type, data 
-                                        FROM documents_elements 
+            $elems = $db->fetchAll("SELECT name, type, data
+                                        FROM documents_elements
                                         WHERE documentId=" . $request->get("id") . " AND (type='input' OR type='textarea' OR type='wysiwyg')");
 
             if ($elems == null && $document->getContentMasterDocumentId() != null) {
-                $elems = $db->fetchAll("SELECT name, type, data 
-                                        FROM documents_elements 
+                $elems = $db->fetchAll("SELECT name, type, data
+                                        FROM documents_elements
                                         WHERE documentId=" . $document->getContentMasterDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg')");
             }
         }
@@ -90,14 +90,11 @@ class DocumentController extends FrontendController
             ];
         }
 
-        $response = JsonResponse::create([
+        return JsonResponse::create([
             "elements" => $elements,
             "langTo" => ($isBrick ? $langTo : null),
             "type" => ($isBrick ? $type : null)
         ]);
-
-        $response->send();
-
     }
 
 
@@ -117,11 +114,9 @@ class DocumentController extends FrontendController
 
         $document->save();
 
-        $response = JsonResponse::create([
+        return JsonResponse::create([
             "success" => true
         ]);
-
-        $response->send();
 
     }
 
@@ -245,20 +240,18 @@ class DocumentController extends FrontendController
                 }
             }
 
-            $response = JsonResponse::create([
+            return JsonResponse::create([
                 'success' => $success,
                 'id' => $document->getId(),
                 'type' => $document->getType(),
                 'parentId' => $document->getParentId()
             ]);
-            $response->send();
 
         } else {
-            $response = JsonResponse::create([
+            return JsonResponse::create([
                 'success' => $success,
                 'message' => $errorMessage
             ]);
-            $response->send();
         }
     }
 }
