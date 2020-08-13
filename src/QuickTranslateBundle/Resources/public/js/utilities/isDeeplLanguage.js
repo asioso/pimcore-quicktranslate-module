@@ -8,6 +8,9 @@
  */
 
 function isDeeplLanguage(lang) {
+    if (!lang) {
+        return false;
+    }
 
     lang = lang.split("_")[0];
 
@@ -24,8 +27,6 @@ function isDeeplLanguage(lang) {
         "ja",
         "zh"
     ];
-
-
 
     return deeplLanguages.includes(lang);
 }
