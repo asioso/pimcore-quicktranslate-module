@@ -7,15 +7,20 @@
  *
  */
 
-pimcore.registerNS("pimcore.document.tags.areablock");
-pimcore.document.tags.areablock = Class.create(pimcore.document.tags.areablock, {
+pimcore.registerNS("pimcore.document.editables.areablock");
+pimcore.document.editables.areablock = Class.create(pimcore.document.editables.areablock, {
 
-    initialize: function (id, name, options, data, inherited) {
+    namingStrategies: {},
+    namingStrategy: null,
+    dialogBoxes: {},
+
+    initialize: function (id, name, config, data, inherited) {
 
         this.id = id;
         this.name = name;
         this.elements = [];
-        this.options = this.parseOptions(options);
+        this.brickTypeUsageCounter = [];
+        this.config = this.parseConfig(config);
 
         this.initNamingStrategies();
         var namingStrategy = this.getNamingStrategy();
@@ -24,42 +29,46 @@ pimcore.document.tags.areablock = Class.create(pimcore.document.tags.areablock, 
 
         this.applyFallbackIcons();
 
-        if (typeof this.options["toolbar"] == "undefined" || this.options["toolbar"] != false) {
+        if (typeof this.config["toolbar"] == "undefined" || this.config["toolbar"] != false) {
             this.createToolBar();
         }
 
         this.visibilityButtons = {};
 
         var plusButton, minusButton, upButton, downButton, optionsButton, plusDiv, minusDiv, upDiv, downDiv, optionsDiv,
-            typeDiv, typeButton, labelText, editDiv, editButton, visibilityDiv, labelDiv, plusUpDiv,
-            plusUpButton;
+            typeDiv, typeButton, labelText, editDiv, editButton, visibilityDiv, labelDiv, plusUpDiv, plusUpButton,
+            dialogBoxDiv, dialogBoxButton;
 
         this.elements = Ext.get(id).query('.pimcore_block_entry[data-name="' + name + '"][key]');
 
         // reload or not => default not
-        if (typeof this.options["reload"] == "undefined") {
-            this.options.reload = false;
+        if (typeof this.config["reload"] == "undefined") {
+            this.config.reload = false;
         }
 
-        if (!this.options['controlsTrigger']) {
-            this.options['controlsTrigger'] = 'hover';
+        if (!this.config['controlsTrigger']) {
+            this.config['controlsTrigger'] = 'hover';
+        }
+
+        for (var i=0; i<data.length; i++) {
+            this.brickTypeUsageCounter[data[i].type] = this.brickTypeUsageCounter[data[i].type]+1 || 1;
         }
 
         // type mapping
         var typeNameMappings = {};
         this.allowedTypes = []; // this is for the toolbar to check if an brick can be dropped to this areablock
-        for (var i = 0; i < this.options.types.length; i++) {
-            typeNameMappings[this.options.types[i].type] = {
-                name: this.options.types[i].name,
-                description: this.options.types[i].description,
-                icon: this.options.types[i].icon
+        for (var i = 0; i < this.config.types.length; i++) {
+            typeNameMappings[this.config.types[i].type] = {
+                name: this.config.types[i].name,
+                description: this.config.types[i].description,
+                icon: this.config.types[i].icon
             };
 
-            this.allowedTypes.push(this.options.types[i].type);
+            this.allowedTypes.push(this.config.types[i].type);
         }
 
         var limitReached = false;
-        if (typeof options["limit"] != "undefined" && this.elements.length >= options.limit) {
+        if (typeof config["limit"] != "undefined" && this.elements.length >= config.limit) {
             limitReached = true;
         }
 
@@ -577,16 +586,16 @@ pimcore.document.tags.areablock = Class.create(pimcore.document.tags.areablock, 
 
 
                 var buttonContainer = Ext.get(this.elements[i]).selectNode('.pimcore_area_buttons', false);
-                if (this.options['controlsAlign']) {
-                    buttonContainer.addCls(this.options['controlsAlign']);
+                if (this.config['controlsAlign']) {
+                    buttonContainer.addCls(this.config['controlsAlign']);
                 } else {
                     // top is default
                     buttonContainer.addCls('top');
                 }
 
-                buttonContainer.addCls(this.options['controlsTrigger']);
+                buttonContainer.addCls(this.config['controlsTrigger']);
 
-                if (this.options['controlsTrigger'] === 'hover') {
+                if (this.config['controlsTrigger'] === 'hover') {
                     Ext.get(this.elements[i]).on('mouseenter', function (event) {
 
                         if (Ext.dd.DragDropMgr.dragCurrent) {
@@ -623,7 +632,7 @@ pimcore.document.tags.areablock = Class.create(pimcore.document.tags.areablock, 
         }
 
         // click outside, hide all block buttons
-        if (this.options['controlsTrigger'] === 'hover') {
+        if (this.config['controlsTrigger'] === 'hover') {
             Ext.getBody().on('click', function (event) {
                 if (!Ext.get(id).isAncestor(event.target)) {
                     Ext.get(id).query('.pimcore_area_buttons', false).forEach(function (el) {
