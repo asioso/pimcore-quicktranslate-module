@@ -59,7 +59,11 @@ pimcore.plugin.asiosoQuickTranslateBundle = Class.create(pimcore.plugin.admin, {
         if (document.data.locked) {
             menuParent = document.toolbar.items.items[6].btnInnerEl.component.menu.items.items[0].menu;
         } else {
-            menuParent = document.toolbar.items.items[9].btnInnerEl.component.menu.items.items[0].menu;
+            if(document.data.id == 1 ){
+                menuParent = document.toolbar.items.items[7].btnInnerEl.component.menu.items.items[0].menu;
+            }else{
+                menuParent = document.toolbar.items.items[9].btnInnerEl.component.menu.items.items[0].menu;
+            } 
         }
 
         menuParent.add({
