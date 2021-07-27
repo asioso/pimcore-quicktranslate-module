@@ -11,7 +11,6 @@ pimcore.registerNS("pimcore.document.editables.areablock");
 pimcore.document.editables.areablock = Class.create(pimcore.document.editables.areablock, {
 
     namingStrategies: {},
-    namingStrategy: null,
     dialogBoxes: {},
 
     initialize: function (id, name, config, data, inherited) {
@@ -21,9 +20,6 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
         this.elements = [];
         this.brickTypeUsageCounter = [];
         this.config = this.parseConfig(config);
-
-        this.initNamingStrategies();
-        var namingStrategy = this.getNamingStrategy();
 
         this.toolbarGlobalVar = this.getType() + "toolbar";
 
@@ -185,30 +181,12 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                             }
                         },
 
-                        onStartDrag: this.createDropZones.bind(this),
-                        afterDragDrop: this.removeDropZones.bind(this),
-                        afterInvalidDrop: this.removeDropZones.bind(this),
-
                         getRepairXY: function () {
                             return this.dragData.repairXY;
                         }
                     });
                 }.bind(this, i));
                 typeButton.render(typeDiv);
-
-
-                // option button
-                if (namingStrategy.supportsCopyPaste()) {
-                    optionsDiv = Ext.get(this.elements[i]).query('.pimcore_block_options[data-name="' + this.name + '"]')[0];
-                    optionsButton = new Ext.Button({
-                        cls: "pimcore_block_button_options",
-                        iconCls: "pimcore_icon_white_copy",
-                        listeners: {
-                            "click": this.optionsClickhandler.bind(this, this.elements[i])
-                        }
-                    });
-                    optionsButton.render(optionsDiv);
-                }
 
                 visibilityDiv = Ext.get(this.elements[i]).query('.pimcore_block_visibility[data-name="' + this.name + '"]')[0];
                 this.visibilityButtons[this.elements[i].key] = new Ext.Button({
