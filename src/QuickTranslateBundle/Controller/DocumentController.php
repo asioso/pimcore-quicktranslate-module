@@ -57,12 +57,12 @@ class DocumentController extends FrontendController
 
             $brickName = $request->get("brickName");
             $elems = $db->fetchAll("SELECT name, type, data
-                                        FROM documents_elements
+                                        FROM documents_editables
                                         WHERE documentId=" . $document->getId() . " AND (type='input' OR type='textarea' OR type='wysiwyg') AND name LIKE '" . $brickName . "%'");
 
             if ($elems == null && $document->getContentMasterDocumentId() != null) {
                 $elems = $db->fetchAll("SELECT name, type, data
-                                        FROM documents_elements
+                                        FROM documents_editables
                                         WHERE documentId=" . $document->getContentMasterDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg') AND name LIKE '" . $brickName . "%'");
             }
 
@@ -72,12 +72,12 @@ class DocumentController extends FrontendController
         } else {
 
             $elems = $db->fetchAll("SELECT name, type, data
-                                        FROM documents_elements
+                                        FROM documents_editables
                                         WHERE documentId=" . $request->get("id") . " AND (type='input' OR type='textarea' OR type='wysiwyg')");
 
             if ($elems == null && $document->getContentMasterDocumentId() != null) {
                 $elems = $db->fetchAll("SELECT name, type, data
-                                        FROM documents_elements
+                                        FROM documents_editables
                                         WHERE documentId=" . $document->getContentMasterDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg')");
             }
         }
@@ -103,9 +103,9 @@ class DocumentController extends FrontendController
         $elements = json_decode($request->get("elements"), true);
         $document = Document::getById($request->get("id"));
 
-        $oldElements = $document->getElements();
+        $oldElements = $document->getEditables();
 
-        $document->setElements($oldElements);
+        $document->setEditables($oldElements);
 
         foreach ($elements as $key => $element) {
 
@@ -223,12 +223,12 @@ class DocumentController extends FrontendController
                     $translateDoc = Document::getById($request->get("translateDocId"));
 
 
-                    $newDoc->setElements($translateDoc->getElements());
+                    $newDoc->setEditables($translateDoc->getEditables());
 
                     $elements = json_decode($request->get("elements"), true);
 
                     foreach ($elements as $key => $element) {
-                        $newDoc->setRawElement($key, $element["type"], $element["data"]);
+                        $newDoc->setRawEditable($key, $element["type"], $element["data"]);
                     }
 
                     $newDoc->save();
