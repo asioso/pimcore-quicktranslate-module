@@ -147,15 +147,11 @@ class DocumentController extends FrontendController
             if ($docType) {
                 $createValues['template'] = $docType->getTemplate();
                 $createValues['controller'] = $docType->getController();
-                $createValues['action'] = $docType->getAction();
-                $createValues['module'] = $docType->getModule();
                 $createValues['legacy'] = $docType->getLegacy();
             } elseif ($request->get('translationsBaseDocument')) {
                 $translationsBaseDocument = Document::getById($request->get('translationsBaseDocument'));
                 $createValues['template'] = $translationsBaseDocument->getTemplate();
                 $createValues['controller'] = $translationsBaseDocument->getController();
-                $createValues['action'] = $translationsBaseDocument->getAction();
-                $createValues['module'] = $translationsBaseDocument->getModule();
             } elseif ($request->get('type') == 'page' || $request->get('type') == 'snippet' || $request->get('type') == 'email') {
                 $createValues += Tool::getRoutingDefaults();
             }
