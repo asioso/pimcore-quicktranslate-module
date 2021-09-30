@@ -24,7 +24,7 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
     public function getJsPaths()
     {
         return [
-            'https://code.jquery.com/jquery-3.4.1.min.js',
+            'https://code.jquery.com/jquery-3.6.0.min.js',
             '/bundles/quicktranslate/js/pimcore/startup.js',
             '/bundles/quicktranslate/js/quick-translate-btn/quickTranslateObjectBtn.js',
             '/bundles/quicktranslate/js/quick-translate-btn/quickTranslateDocument.js',
