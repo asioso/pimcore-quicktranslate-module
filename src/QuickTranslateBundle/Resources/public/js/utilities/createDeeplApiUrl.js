@@ -19,8 +19,8 @@ function createDeeplApiUrl(key, data, langFrom = null, langTo, autoDetect = fals
     langTo = langTo.toUpperCase();
 
     if (autoDetect) {
-        return 'https://api.deepl.com/v2/translate?auth_key=' + key + '&text=' + data + '&target_lang=' + langTo + '&split_sentences=nonewlines&tag_handling=xml';
+        return 'https://api-free.deepl.com/v2/translate?auth_key=' + key + '&text=' + data + '&target_lang=' + langTo + '&split_sentences=nonewlines&tag_handling=xml';
     }
-    return 'https://api.deepl.com/v2/translate?auth_key=' + key + '&text=' + data + '&source_lang=' + langFrom + '&target_lang=' + langTo + '&split_sentences=nonewlines&tag_handling=xml';
+    return 'https://api-free.deepl.com/v2/translate?auth_key=' + key + '&text=' + data + '&source_lang=' + langFrom + '&target_lang=' + langTo + '&split_sentences=nonewlines&tag_handling=xml';
 
 };
