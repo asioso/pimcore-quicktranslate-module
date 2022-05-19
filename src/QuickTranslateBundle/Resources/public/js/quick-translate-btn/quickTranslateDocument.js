@@ -146,8 +146,11 @@ function quickTranslateDocument(documentTranslate) {
                         if (authKey.exists) {
 
                             var key = authKey.authKey;
-
-                            var checkerUrl = createDeeplApiUrl(key, "", "DE", "EN");
+                            var type = "FREE";
+                            if (authKey.type_exists) {
+                                type = authKey.type;
+                            }
+                            var checkerUrl = createDeeplApiUrl(key, type, "", "DE", "EN");
 
                             /* settings for checker request to deepl */
                             var checkerSettings = {
@@ -208,7 +211,7 @@ function quickTranslateDocument(documentTranslate) {
                                                                         params["translateDocId"] = documentTranslate.id;
 
                                                                         Object.keys(elements.elements).forEach(function (key) {
-                                                                            xml += '<' + key + ' quick-t-tag="'+ key +'"  quick-t-type="' + elements.elements[key]["type"] + '">' + elements.elements[key]["data"] + '</' + key + '>';
+                                                                            xml += '<' + key + ' quick-t-tag="' + key + '"  quick-t-type="' + elements.elements[key]["type"] + '">' + elements.elements[key]["data"] + '</' + key + '>';
                                                                         });
 
 
@@ -244,12 +247,12 @@ function quickTranslateDocument(documentTranslate) {
                                                                             var parts = JSON.parse(xmlToJson(xml, null, true));
 
                                                                             Object.keys(parts).forEach(function (key) {
-                                                                                var part = '<' + key + ' quick-t-tag="'+ key +'" quick-t-type="' + parts[key]["type"] + '">' + parts[key]["data"] + '</' + key + '>';
+                                                                                var part = '<' + key + ' quick-t-tag="' + key + '" quick-t-type="' + parts[key]["type"] + '">' + parts[key]["data"] + '</' + key + '>';
                                                                                 partsToTranslate.push(xmlRegReplace(part));
                                                                             });
 
                                                                             partsToTranslate.sort(function (a, b) {
-                                                                               return a.length - b.length;
+                                                                                return a.length - b.length;
                                                                             });
 
                                                                             var translatedParts = [];
@@ -259,7 +262,7 @@ function quickTranslateDocument(documentTranslate) {
                                                                             var progressBar = quickTranslateProgressBar();
 
                                                                             for (var i = 0; i < partsToTranslate.length; i++) {
-                                                                                var url = createDeeplApiUrl(key, partsToTranslate[i], langFrom, langTo);
+                                                                                var url = createDeeplApiUrl(key, type, partsToTranslate[i], langFrom, langTo);
                                                                                 settings.url = url;
 
                                                                                 $.ajax(settings).done(function (response) {
@@ -337,7 +340,7 @@ function quickTranslateDocument(documentTranslate) {
 
                                                                         } else {
 
-                                                                            var url = createDeeplApiUrl(key, xml, langFrom, langTo);
+                                                                            var url = createDeeplApiUrl(key, type, xml, langFrom, langTo);
                                                                             settings.url = url;
 
                                                                             function deeplAjax(settings) {

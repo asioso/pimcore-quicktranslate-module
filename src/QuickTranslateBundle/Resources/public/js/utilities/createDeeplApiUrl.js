@@ -8,7 +8,7 @@
  */
 
 /* returns url for ajax request on deepls api */
-function createDeeplApiUrl(key, data, langFrom = null, langTo, autoDetect = false) {
+function createDeeplApiUrl(key, type, data, langFrom = null, langTo, autoDetect = false) {
 
     if (langFrom) {
         langFrom = langFrom.split("_")[0];
@@ -17,10 +17,14 @@ function createDeeplApiUrl(key, data, langFrom = null, langTo, autoDetect = fals
 
     langTo = langTo.split("_")[0];
     langTo = langTo.toUpperCase();
-
-    if (autoDetect) {
-        return 'https://api-free.deepl.com/v2/translate?auth_key=' + key + '&text=' + data + '&target_lang=' + langTo + '&split_sentences=nonewlines&tag_handling=xml';
+    if (type == "PRO") {
+        url = 'https://api.deepl.com';
+    } else {
+        url = 'https://api-free.deepl.com';
     }
-    return 'https://api-free.deepl.com/v2/translate?auth_key=' + key + '&text=' + data + '&source_lang=' + langFrom + '&target_lang=' + langTo + '&split_sentences=nonewlines&tag_handling=xml';
+    if (autoDetect) {
+        return url + '/v2/translate?auth_key=' + key + '&text=' + data + '&target_lang=' + langTo + '&split_sentences=nonewlines&tag_handling=xml';
+    }
+    return url + '/v2/translate?auth_key=' + key + '&text=' + data + '&source_lang=' + langFrom + '&target_lang=' + langTo + '&split_sentences=nonewlines&tag_handling=xml';
 
 };

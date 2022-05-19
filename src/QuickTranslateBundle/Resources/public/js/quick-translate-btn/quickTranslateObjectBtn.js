@@ -78,8 +78,11 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
 
                                     /* deepl authentication key */
                                     var key = authKey.authKey;
-
-                                    var checkerUrl = createDeeplApiUrl(key, "", "DE", "EN");
+                                    var type = "FREE";
+                                    if (authKey.type_exists) {
+                                        type = authKey.type;
+                                    }
+                                    var checkerUrl = createDeeplApiUrl(key, type, "", "DE", "EN");
 
                                     /* settings for checker request to deepl */
                                     var checkerSettings = {
@@ -166,7 +169,7 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
 
 
                                                 for (var i = 0; i < partsToTranslate.length; i++) {
-                                                    var url = createDeeplApiUrl(key, partsToTranslate[i], langs[0], langs[1]);
+                                                    var url = createDeeplApiUrl(key, type, partsToTranslate[i], langs[0], langs[1]);
                                                     settings.url = url;
 
                                                     $.ajax(settings).done(function (response) {
@@ -242,7 +245,7 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
 
                                                 xmlToJson(xmlStr);
 
-                                                quickTranslate(key, xmlStr, srcSet, langs[0], langs[1], this.element.id, this.translateObject, quickTranslatecreateWindow);
+                                                quickTranslate(key, type, xmlStr, srcSet, langs[0], langs[1], this.element.id, this.translateObject, quickTranslatecreateWindow);
 
                                             }
 
