@@ -26,7 +26,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
             plusButton.remove();
         }
 
-        if(!limitReached) {
+        if (!limitReached) {
             // plus buttons
             plusUpDiv = Ext.get(element).query('.pimcore_block_plus_up[data-name="' + this.name + '"]')[0];
             plusUpButton = new Ext.Button({
@@ -103,7 +103,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
             typeButton.on("afterrender", function (element, v) {
                 v.dragZone = new Ext.dd.DragZone(v.getEl(), {
                     hasOuterHandles: true,
-                    getDragData: function(e) {
+                    getDragData: function (e) {
                         var sourceEl = element;
 
                         // only use the button as proxy element
@@ -127,7 +127,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                     beforeDragOut: function (target) {
                         return target ? true : false;
                     },
-                    getRepairXY: function() {
+                    getRepairXY: function () {
                         return this.dragData.repairXY;
                     }
                 });
@@ -165,7 +165,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                 }.bind(this, element)
             });
             this.visibilityButtons[element.key].render(visibilityDiv);
-            if(element.dataset.hidden == "true") {
+            if (element.dataset.hidden == "true") {
                 Ext.get(element).addCls('pimcore_area_hidden');
             }
         }
@@ -204,8 +204,11 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                         if (authKey.exists) {
 
                             var key = authKey.authKey;
-
-                            var checkerUrl = createDeeplApiUrl(key, "", "DE", "EN");
+                            var type = "FREE";
+                            if (authKey.type_exists) {
+                                type = authKey.type;
+                            }
+                            var checkerUrl = createDeeplApiUrl(key, type, "", "DE", "EN");
 
                             /* settings for checker request to deepl */
                             var checkerSettings = {
@@ -218,7 +221,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                             $.ajax(checkerSettings).done(function () {
 
                                 var elementsWindow = quickTranslatecreateWindow("Processing", "Getting your content ready for translation...");
-                            
+
                                 Ext.Ajax.request({
                                     url: "/asioso_quick_translate_get_document_elements",
                                     method: 'GET',
@@ -295,7 +298,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                                     var progressBar = quickTranslateProgressBar();
 
                                                     for (var i = 0; i < partsToTranslate.length; i++) {
-                                                        var url = createDeeplApiUrl(key, partsToTranslate[i], null, langTo, true);
+                                                        var url = createDeeplApiUrl(key, type, partsToTranslate[i], null, langTo, true);
                                                         settings.url = url;
 
                                                         $.ajax(settings).done(function (response) {
@@ -394,7 +397,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                                                         if (translatedParts.includes(null)) {
                                                                             window.html = "Your brick was successfully saved, but we couldn't translate all the elements!<br><br>" + translatedElements + "<br>" + notTranslatedElements + "<br><br>To see your changes click reload!";
                                                                         } else {
-                                                                            window.html = "Your brick was successfully translated and saved! To see your changes click reload!" ;
+                                                                            window.html = "Your brick was successfully translated and saved! To see your changes click reload!";
                                                                         }
 
                                                                     },
@@ -416,7 +419,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
 
                                                 } else {
 
-                                                    var url = createDeeplApiUrl(key, xml, null, langTo, true);
+                                                    var url = createDeeplApiUrl(key, type, xml, null, langTo, true);
                                                     settings.url = url;
 
                                                     function deeplAjax(settings) {
@@ -538,8 +541,8 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
         quickTranslateButton.render(visibilityDiv);
 
         labelDiv = Ext.get(Ext.get(element).query('.pimcore_block_label[data-name="' + this.name + '"]')[0]);
-        labelText = "<b>"  + element.type + "</b>";
-        if(this.typeNameMappings[element.type]
+        labelText = "<b>" + element.type + "</b>";
+        if (this.typeNameMappings[element.type]
             && typeof this.typeNameMappings[element.type].name != "undefined") {
             labelText = "<b>" + this.typeNameMappings[element.type].name + "</b> "
                 + this.typeNameMappings[element.type].description;

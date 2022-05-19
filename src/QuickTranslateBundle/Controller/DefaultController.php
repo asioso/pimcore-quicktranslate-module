@@ -21,10 +21,15 @@ class DefaultController extends FrontendController
     public function getAuthKeyAction()
     {
         $authKey = WebsiteSetting::getByName("deepl_auth_key") ? WebsiteSetting::getByName("deepl_auth_key")->getData() : null;
+        $type = WebsiteSetting::getByName("deepl_type") ? WebsiteSetting::getByName("deepl_type")->getData() : null;
 
         return JsonResponse::create([
                 "authKey" => $authKey,
                 "exists" => (($authKey == null || "") ? false : true),
+                "type" => $type,
+                "type_exists" => (($type == null || "") ? false : true),
         ]);
     }
+
+ 
 }

@@ -25,7 +25,21 @@ function isDeeplLanguage(lang) {
         "pl",
         "ru",
         "ja",
-        "zh"
+        "zh",
+        // new languages
+        "bg",
+        "cs",
+        "da",
+        "el",
+        "et",
+        "fi",
+        "hu",
+        "lt",
+        "lv",
+        "ro",
+        "sk",
+        "sl",
+        "sv",
     ];
 
     return deeplLanguages.includes(lang);

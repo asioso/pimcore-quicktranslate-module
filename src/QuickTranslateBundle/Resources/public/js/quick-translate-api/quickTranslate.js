@@ -7,9 +7,9 @@
  *
  */
 
-function quickTranslate(key, data,srcSet = null,langFrom, langTo, id,successCallback, failCallback) {
+function quickTranslate(key, type, data,srcSet = null,langFrom, langTo, id,successCallback, failCallback) {
 
-    var url = createDeeplApiUrl(key, data, langFrom, langTo);
+    var url = createDeeplApiUrl(key, type, data, langFrom, langTo);
 
     var settings = {
         "async": true,
