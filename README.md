@@ -14,6 +14,19 @@ With DeepL the following languages can currently be translated:
 * Russian 
 * Japanese 
 * Chinese (simplified) 
+* Bulgarian
+* Czech
+* Danish
+* Greek
+* Estonian
+* Finish
+* Hungarian
+* Lithuanian
+* Latvian
+* Romanian
+* Slovak
+* Slovenian
+* Swedish
  
 ## Prerequisites
 * PHP 7.1 or higher (https://secure.php.net/)
@@ -30,7 +43,6 @@ composer require asioso/pimcore-quicktranslate-module
 
 ## Configuration
 
-just enable the bundle in the pimcore extension manager. *And* add your api key in the Pimcore WebsiteSettings as 'deepl_auth_key'!
-
+just enable the bundle in the pimcore extension manager. *And* add your api key in the Pimcore WebsiteSettings as 'deepl_auth_key', and DeepL api type as 'deepl_type' with two options "PRO" or "FREE"!
 
 
