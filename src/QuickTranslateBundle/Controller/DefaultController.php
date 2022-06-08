@@ -4,12 +4,13 @@
  *
  * Full copyright and license information is available in LICENSE.md which is distributed with this source code.
  *
- *  @copyright  Copyright (c) Asioso GmbH (https://www.asioso.com)
+ * @copyright  Copyright (c) Asioso GmbH (https://www.asioso.com)
  *
  */
 
 namespace Asioso\QuickTranslateBundle\Controller;
 
+use GuzzleHttp\Client;
 use Pimcore\Controller\FrontendController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Pimcore\Model\WebsiteSetting;
@@ -24,12 +25,51 @@ class DefaultController extends FrontendController
         $type = WebsiteSetting::getByName("deepl_type") ? WebsiteSetting::getByName("deepl_type")->getData() : null;
 
         return JsonResponse::create([
-                "authKey" => $authKey,
-                "exists" => (($authKey == null || "") ? false : true),
-                "type" => $type,
-                "type_exists" => (($type == null || "") ? false : true),
+            "authKey" => $authKey,
+            "exists" => (($authKey == null || "") ? false : true),
+            "type" => $type,
+            "type_exists" => (($type == null || "") ? false : true),
         ]);
     }
 
- 
+    public function getGlossariesAction()
+    {
+        $authKey = WebsiteSetting::getByName("deepl_auth_key") ? WebsiteSetting::getByName("deepl_auth_key")->getData() : null;
+        $type = WebsiteSetting::getByName("deepl_type") ? WebsiteSetting::getByName("deepl_type")->getData() : null;
+
+        $glossaries = null;
+
+        if ($authKey) {
+            $headers = [
+                'Authorization' => 'DeepL-Auth-Key ' . $authKey,
+            ];
+
+            $client = new Client([
+                'headers' => $headers
+            ]);
+
+            if ($type == 'PRO') {
+                $response = $client->request('GET', 'https://api.deepl.com/v2/glossaries');
+            } else {
+                $response = $client->request('GET', 'https://api-free.deepl.com/v2/glossaries');
+            }
+
+            if ($response->getStatusCode() == 200) {
+
+                $resultDecoded = json_decode($response->getBody()->getContents(), true);
+
+                if (isset($resultDecoded['glossaries'])) {
+                    $glossaries = $resultDecoded['glossaries'];
+                }
+
+            }
+
+        }
+
+        return JsonResponse::create([
+            "glossaries" => $glossaries
+        ]);
+    }
+
+
 }
