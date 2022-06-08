@@ -22,3 +22,7 @@ asioso_quick_translate_get_auth_key:
     path:     /asioso_quick_translate_get_auth_key
     controller: Asioso\QuickTranslateBundle\Controller\DefaultController::getAuthKeyAction
 
+asioso_quick_translate_get_glossaries:
+    path: /asioso_quick_translate_get_glossaries
+    controller: Asioso\QuickTranslateBundle\Controller\DefaultController::getGlossariesAction
+
