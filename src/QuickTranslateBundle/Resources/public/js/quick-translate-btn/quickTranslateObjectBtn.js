@@ -99,8 +99,37 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
 
                                         if (!langs.includes(null)) {
 
-                                            var data = this.element.data.data.localizedfields.data[langs[0]];
-                                            var xmlStr = "";
+                                            var data = {},
+                                                xmlStr = "",
+                                                elementData = this.element.data.data;
+                                            if (elementData.hasOwnProperty('localizedfields')) {
+                                                data = { ...data, ...elementData.localizedfields.data[langs[0]] }
+                                            }
+                                            for (let item in elementData) {
+                                                if (Array.isArray(elementData[item])) {
+                                                    elementData[item].forEach((element, index) => {
+                                                        if (elementData[item].length && element.data.localizedfields.data[langs[0]]) {
+                                                            let localizedFields = element.data.localizedfields.data[langs[0]];
+                                                            for (let field in localizedFields) {
+                                                                localizedFields[`structuredData#.${item}.${index}.${element.type}.${field}`] = localizedFields[field];
+                                                                delete localizedFields[field];
+                                                            }
+                                                            data = { ...data, ...localizedFields }
+                                                        }
+                                                    })
+                                                } else if (!Array.isArray(elementData[item]) && typeof elementData[item] === 'object' && elementData[item] !== null && elementData[item].hasOwnProperty('activeGroups')) {
+                                                    if (elementData[item].data[langs[0]]) {
+                                                        let localizedFields = elementData[item].data[langs[0]];
+                                                        for (let storeObject in localizedFields) {
+                                                            for (let field in localizedFields[storeObject]) {
+                                                                localizedFields[storeObject][`classificationStore#.${storeObject}.${item}.${field}`] = localizedFields[storeObject][field];
+                                                                delete localizedFields[storeObject][field];
+                                                            }
+                                                            data = { ...data, ...localizedFields[storeObject] }
+                                                        }
+                                                    }
+                                                }
+                                            }
 
                                             for (var field in data) {
 
