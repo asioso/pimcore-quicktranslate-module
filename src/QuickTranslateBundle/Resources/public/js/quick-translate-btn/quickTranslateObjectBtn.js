@@ -108,13 +108,15 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
                                             for (let item in elementData) {
                                                 if (Array.isArray(elementData[item])) {
                                                     elementData[item].forEach((element, index) => {
-                                                        if (elementData[item].length && element.data.localizedfields.data[langs[0]]) {
-                                                            let localizedFields = element.data.localizedfields.data[langs[0]];
-                                                            for (let field in localizedFields) {
-                                                                localizedFields[`structuredData#.${item}.${index}.${element.type}.${field}`] = localizedFields[field];
-                                                                delete localizedFields[field];
+                                                        if(element !== null && element.data?.localizedfields !== undefined) {
+                                                            if (elementData[item].length && element.data.localizedfields.data[langs[0]]) {
+                                                                let localizedFields = element.data.localizedfields.data[langs[0]];
+                                                                for (let field in localizedFields) {
+                                                                    localizedFields[`structuredData#.${item}.${index}.${element.type}.${field}`] = localizedFields[field];
+                                                                    delete localizedFields[field];
+                                                                }
+                                                                data = {...data, ...localizedFields}
                                                             }
-                                                            data = { ...data, ...localizedFields }
                                                         }
                                                     })
                                                 } else if (!Array.isArray(elementData[item]) && typeof elementData[item] === 'object' && elementData[item] !== null && elementData[item].hasOwnProperty('activeGroups')) {
@@ -130,6 +132,7 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
                                                     }
                                                 }
                                             }
+
 
                                             for (var field in data) {
 
