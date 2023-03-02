@@ -27,6 +27,19 @@ pimcore.plugin.asiosoQuickTranslateBundle = Class.create(pimcore.plugin.admin, {
         if (type === "object") {
             if (object.data.data.hasOwnProperty("localizedfields")) {
                 object.tabbar.add(new pimcore.element.quickTranslateObjectBtn(object, "object").getLayout());
+            } else if (object.data.data) {
+                let objectData = object.data.data;
+                for (let item in objectData) {
+                    if (Array.isArray(objectData[item])) {
+                        objectData[item].forEach((element) => {
+                            if (objectData[item].length && element.data.localizedfields) {
+                                object.tabbar.add(new pimcore.element.quickTranslateObjectBtn(object, "object").getLayout());
+                            }
+                        })
+                    } else if (!Array.isArray(objectData[item]) && typeof objectData[item] === 'object' && objectData[item] !== null && objectData[item].hasOwnProperty('activeGroups')) {
+                        object.tabbar.add(new pimcore.element.quickTranslateObjectBtn(object, "object").getLayout());
+                    }
+                }
             }
         }
     },
