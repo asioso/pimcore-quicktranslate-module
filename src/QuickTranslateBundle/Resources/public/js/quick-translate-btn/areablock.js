@@ -126,7 +126,7 @@ pimcore.document.tags.areablock = Class.create(pimcore.document.tags.areablock, 
                 upDiv = Ext.get(this.elements[i]).query('.pimcore_block_up[data-name="' + this.name + '"]')[0];
                 upButton = new Ext.Button({
                     cls: "pimcore_block_button_up",
-                    iconCls: "pimcore_icon_white_up",
+                    iconCls: "pimcore_icon_white_up pimcore_icon_up",
                     listeners: {
                         "click": this.moveBlockUp.bind(this, this.elements[i])
                     }
@@ -137,7 +137,7 @@ pimcore.document.tags.areablock = Class.create(pimcore.document.tags.areablock, 
                 downDiv = Ext.get(this.elements[i]).query('.pimcore_block_down[data-name="' + this.name + '"]')[0];
                 downButton = new Ext.Button({
                     cls: "pimcore_block_button_down",
-                    iconCls: "pimcore_icon_white_down",
+                    iconCls: "pimcore_icon_white_down pimcore_icon_down",
                     listeners: {
                         "click": this.moveBlockDown.bind(this, this.elements[i])
                     }
@@ -149,7 +149,7 @@ pimcore.document.tags.areablock = Class.create(pimcore.document.tags.areablock, 
                     cls: "pimcore_block_button_type",
                     handleMouseEvents: false,
                     tooltip: t("drag_me"),
-                    iconCls: "pimcore_icon_white_move",
+                    iconCls: "pimcore_icon_white_move pimcore_icon_move",
                     style: "cursor: move;"
                 });
                 typeButton.on("afterrender", function (index, v) {
@@ -193,7 +193,7 @@ pimcore.document.tags.areablock = Class.create(pimcore.document.tags.areablock, 
                     optionsDiv = Ext.get(this.elements[i]).query('.pimcore_block_options[data-name="' + this.name + '"]')[0];
                     optionsButton = new Ext.Button({
                         cls: "pimcore_block_button_options",
-                        iconCls: "pimcore_icon_white_copy",
+                        iconCls: "pimcore_icon_white_copy pimcore_icon_area pimcore_icon_overlay_edit",
                         listeners: {
                             "click": this.optionsClickhandler.bind(this, this.elements[i])
                         }
@@ -204,7 +204,7 @@ pimcore.document.tags.areablock = Class.create(pimcore.document.tags.areablock, 
                 visibilityDiv = Ext.get(this.elements[i]).query('.pimcore_block_visibility[data-name="' + this.name + '"]')[0];
                 this.visibilityButtons[this.elements[i].key] = new Ext.Button({
                     cls: "pimcore_block_button_visibility",
-                    iconCls: "pimcore_icon_white_hide",
+                    iconCls: "pimcore_icon_white_hide pimcore_icon_hide",
                     enableToggle: true,
                     pressed: (this.elements[i].dataset.hidden == "true"),
                     toggleHandler: function (index, el) {
