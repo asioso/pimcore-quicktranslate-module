@@ -26,7 +26,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
             plusButton.remove();
         }
 
-        if (!limitReached) {
+        if(!limitReached) {
             // plus buttons
             plusUpDiv = Ext.get(element).query('.pimcore_block_plus_up[data-name="' + this.name + '"]')[0];
             plusUpButton = new Ext.Button({
@@ -103,7 +103,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
             typeButton.on("afterrender", function (element, v) {
                 v.dragZone = new Ext.dd.DragZone(v.getEl(), {
                     hasOuterHandles: true,
-                    getDragData: function (e) {
+                    getDragData: function(e) {
                         var sourceEl = element;
 
                         // only use the button as proxy element
@@ -127,7 +127,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                     beforeDragOut: function (target) {
                         return target ? true : false;
                     },
-                    getRepairXY: function () {
+                    getRepairXY: function() {
                         return this.dragData.repairXY;
                     }
                 });
@@ -150,46 +150,9 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
             optionsButton.render(optionsDiv);
         }
 
-
-        //visibility buttons
-        visibilityButtons = this.visibilityButtons[element.key];
-        if (typeof visibilityButtons === 'undefined') {
-            visibilityDiv = Ext.get(element).query('.pimcore_block_visibility[data-name="' + this.name + '"]')[0];
-            this.visibilityButtons[element.key] = new Ext.Button({
-                cls: "pimcore_block_button_visibility",
-                iconCls: "pimcore_icon_white_hide",
-                enableToggle: true,
-                pressed: (element.dataset.hidden == "true"),
-                toggleHandler: function (element, el) {
-                    Ext.get(element).toggleCls('pimcore_area_hidden');
-                }.bind(this, element)
-            });
-            this.visibilityButtons[element.key].render(visibilityDiv);
-            if (element.dataset.hidden == "true") {
-                Ext.get(element).addCls('pimcore_area_hidden');
-            }
-        }
-
-
-        //dialogBox button
-        dialogBoxDiv = Ext.get(element).query('.pimcore_block_dialog[data-name="' + this.name + '"]')[0];
-        if (dialogBoxDiv) {
-            dialogBoxButton = Ext.get(element).query('.pimcore_block_dialog[data-name="' + this.name + '"] .pimcore_block_button_dialog')[0];
-            if (typeof dialogBoxButton === 'undefined') {
-                dialogBoxDiv = Ext.get(element).query('.pimcore_block_dialog[data-name="' + this.name + '"]')[0];
-                dialogBoxButton = new Ext.Button({
-                    cls: "pimcore_block_button_dialog",
-                    iconCls: "pimcore_icon_white_edit",
-                    listeners: {
-                        "click": this.openEditableDialogBox.bind(this, element, dialogBoxDiv)
-                    }
-                });
-                dialogBoxButton.render(dialogBoxDiv);
-            }
-        }
-
         /* add quicktranslate btn */
         var quickTranslateButton = new Ext.Button({
+            cls: "pimcore_block_button_translate",
             iconCls: 'quick-translate-icon',
             scale: 'small',
             handler: function (i) {
@@ -538,11 +501,65 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
 
             }.bind(this, element)
         });
-        quickTranslateButton.render(visibilityDiv);
+
+        //visibility buttons
+        visibilityButtons = this.visibilityButtons[element.key];
+        if (typeof visibilityButtons === 'undefined') {
+            var elementIcon = "pimcore_material_icon_preview";
+            if (element.dataset.hidden == "true") {
+                elementIcon = "pimcore_icon_white_hide";
+            }
+            visibilityDiv = Ext.get(element).query('.pimcore_block_visibility[data-name="' + this.name + '"]')[0];
+            this.visibilityButtons[element.key] = new Ext.Button({
+                cls: "pimcore_block_button_visibility",
+                iconCls: elementIcon,
+                enableToggle: true,
+                pressed: (element.dataset.hidden == "true"),
+                toggleHandler: function (element, el) {
+                    Ext.get(element).toggleCls('pimcore_area_hidden');
+                    if (el.btnIconEl.dom.classList.contains('pimcore_icon_white_hide')) {
+                        Ext.get(el.btnIconEl.dom).removeCls('pimcore_icon_white_hide');
+                        Ext.get(el.btnIconEl.dom).addCls('pimcore_material_icon_preview');
+                    } else {
+                        Ext.get(el.btnIconEl.dom).removeCls('pimcore_material_icon_preview');
+                        Ext.get(el.btnIconEl.dom).addCls('pimcore_icon_white_hide');
+                    }
+                }.bind(this, element)
+            });
+            this.visibilityButtons[element.key].render(visibilityDiv);
+            quickTranslateButton.render(visibilityDiv);
+            new Ext.tip.ToolTip({
+                target: this.visibilityButtons[element.key],
+                html: t("show_hide_areablock")
+            });
+            if(element.dataset.hidden == "true") {
+                Ext.get(element).addCls('pimcore_area_hidden');
+            }
+        }
+
+
+        //dialogBox button
+        dialogBoxDiv = Ext.get(element).query('.pimcore_block_dialog[data-name="' + this.name + '"]')[0];
+        if (dialogBoxDiv) {
+            dialogBoxButton = Ext.get(element).query('.pimcore_block_dialog[data-name="' + this.name + '"] .pimcore_block_button_dialog')[0];
+            if (typeof dialogBoxButton === 'undefined') {
+                dialogBoxDiv = Ext.get(element).query('.pimcore_block_dialog[data-name="' + this.name + '"]')[0];
+                dialogBoxButton = new Ext.Button({
+                    cls: "pimcore_block_button_dialog",
+                    iconCls: "pimcore_icon_white_edit",
+                    listeners: {
+                        "click": this.openEditableDialogBox.bind(this, element, dialogBoxDiv)
+                    }
+                });
+                dialogBoxButton.render(dialogBoxDiv);
+            }
+        }
+
+
 
         labelDiv = Ext.get(Ext.get(element).query('.pimcore_block_label[data-name="' + this.name + '"]')[0]);
-        labelText = "<b>" + element.type + "</b>";
-        if (this.typeNameMappings[element.type]
+        labelText = "<b>"  + element.type + "</b>";
+        if(this.typeNameMappings[element.type]
             && typeof this.typeNameMappings[element.type].name != "undefined") {
             labelText = "<b>" + this.typeNameMappings[element.type].name + "</b> "
                 + this.typeNameMappings[element.type].description;
