@@ -21,14 +21,16 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
 
         if (this.layout == null) {
 
-            var langs = this.getLangExtStore(this.getLanguages(), ["id", "name"]);
+
+            var langsFrom = this.getLangExtStore(this.getLanguagesFrom(), ["id", "name"]);
+            var langsTo = this.getLangExtStore(this.getLanguagesTo(), ["id", "name"]);
 
             var langFrom = new Ext.form.ComboBox({
                 id: 'langFrom' + this.element.id,
                 name: "langFrom" + this.element.id,
                 valueField: "id",
                 displayField: 'name',
-                store: langs,
+                store: langsFrom,
                 editable: false,
                 triggerAction: 'all',
                 mode: "local",
@@ -43,7 +45,7 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
                 name: "langTo" + this.element.id,
                 valueField: "id",
                 displayField: 'name',
-                store: langs,
+                store: langsTo,
                 editable: false,
                 triggerAction: 'all',
                 mode: "local",
@@ -340,10 +342,41 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
 
     },
 
+	getLanguagesTo: function () {
+
+        var locales = pimcore.settings.websiteLanguages.filter(function (language) {
+            return isDeeplLanguage(language);
+        });
+
+		var languageAllowed = []; 
+		
+		// No restriction (empty array)
+		if(pimcore.currentuser.websiteTranslationLanguagesEdit.length + pimcore.currentuser.websiteTranslationLanguagesView.length == 0 ){
+			languageAllowed = locales;
+		}else{		
+			for (var j = 0; j < locales.length; j++) {
+				if( pimcore.currentuser.websiteTranslationLanguagesEdit.includes(locales[j]) ) {
+					languageAllowed.push(locales[j]);
+				}
+			}
+		}
+
+        var languages = [];
+
+        for (var i = 0; i < locales.length; i++) {
+			if( languageAllowed.includes(locales[i]) ) {
+				var langText = pimcore.available_languages[locales[i]] + " [" + locales[i] + "]";
+				languages.push([locales[i], langText]);
+			}
+        }
+        ;
+		
+        return languages;
+
+    },
 
     /* get all available languages configured in admin panel that are supported by deepl*/
-    getLanguages: function () {
-
+    getLanguagesFrom: function () {
 
         var locales = pimcore.settings.websiteLanguages.filter(function (language) {
             return isDeeplLanguage(language);
@@ -352,11 +385,11 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
         var languages = [];
 
         for (var i = 0; i < locales.length; i++) {
-            var langText = pimcore.available_languages[locales[i]] + " [" + locales[i] + "]";
-            languages.push([locales[i], langText]);
+				var langText = pimcore.available_languages[locales[i]] + " [" + locales[i] + "]";
+				languages.push([locales[i], langText]);
         }
         ;
-
+		
         return languages;
 
     },
