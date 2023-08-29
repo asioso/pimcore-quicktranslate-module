@@ -56,12 +56,12 @@ class DocumentController extends FrontendController
             $id = $document->getContentMasterDocumentId() != null ? $document->getContentMasterDocumentId() : $document->getId();
 
             $brickName = $request->get("brickName");
-            $elems = $db->fetchAll("SELECT name, type, data
+            $elems = $db->fetchAllAssociative("SELECT name, type, data
                                         FROM documents_editables
                                         WHERE documentId=" . $document->getId() . " AND (type='input' OR type='textarea' OR type='wysiwyg') AND name LIKE '" . $brickName . "%'");
 
             if ($elems == null && $document->getContentMasterDocumentId() != null) {
-                $elems = $db->fetchAll("SELECT name, type, data
+                $elems = $db->fetchAllAssociative("SELECT name, type, data
                                         FROM documents_editables
                                         WHERE documentId=" . $document->getContentMasterDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg') AND name LIKE '" . $brickName . "%'");
             }
@@ -71,12 +71,12 @@ class DocumentController extends FrontendController
 
         } else {
 
-            $elems = $db->fetchAll("SELECT name, type, data
+            $elems = $db->fetchAllAssociative("SELECT name, type, data
                                         FROM documents_editables
                                         WHERE documentId=" . $request->get("id") . " AND (type='input' OR type='textarea' OR type='wysiwyg')");
 
             if ($elems == null && $document->getContentMasterDocumentId() != null) {
-                $elems = $db->fetchAll("SELECT name, type, data
+                $elems = $db->fetchAllAssociative("SELECT name, type, data
                                         FROM documents_editables
                                         WHERE documentId=" . $document->getContentMasterDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg')");
             }
