@@ -70,7 +70,7 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
     }
 
 
-    public function getNiceName()
+    public function getNiceName() : string
     {
         return 'Asioso - QuickTranslate Bundle';
     }
@@ -80,7 +80,7 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription() : string
     {
         return "";
     }
