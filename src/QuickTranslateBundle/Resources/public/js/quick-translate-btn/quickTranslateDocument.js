@@ -14,7 +14,7 @@ function quickTranslateDocument(documentTranslate) {
     var websiteLanguages = pimcore.settings.websiteLanguages;
     var selectContent = "";
     for (var i = 0; i < websiteLanguages.length; i++) {
-        if (documentTranslate.data.properties["language"]["data"] != websiteLanguages[i] && isDeeplLanguage(websiteLanguages[i])) {
+        if (documentTranslate.data.properties["language"] && documentTranslate.data.properties["language"]["data"] != websiteLanguages[i] && isDeeplLanguage(websiteLanguages[i])) {
             selectContent = pimcore.available_languages[websiteLanguages[i]] + " [" + websiteLanguages[i] + "]";
             languagestore.push([websiteLanguages[i], selectContent]);
         }

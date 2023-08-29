@@ -12,16 +12,17 @@ namespace Asioso\QuickTranslateBundle;
 
 use PackageVersions\Versions;
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
-use Pimcore\Extension\Bundle\PimcoreBundleInterface;
+use Pimcore\Extension\Bundle\PimcoreBundleAdminClassicInterface;
+use Pimcore\Extension\Bundle\Traits\BundleAdminClassicTrait;
 use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;
 
-class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundleInterface
+class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundleAdminClassicInterface
 {
-
+    use BundleAdminClassicTrait;
     use PackageVersionTrait;
     const PACKAGE_NAME = 'asioso/pimcore-quicktranslate-module';
 
-    public function getJsPaths()
+    public function getJsPaths() : array
     {
         return [
             'https://code.jquery.com/jquery-3.6.0.min.js',
@@ -39,7 +40,7 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
         ];
     }
 
-    public function getEditmodeJsPaths()
+    public function getEditmodeJsPaths() : array
     {
 
         return [
@@ -55,14 +56,14 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
 
     }
 
-    public function getEditmodeCssPaths()
+    public function getEditmodeCssPaths() : array
     {
         return [
             '/bundles/quicktranslate/css/quick-translate.css'
         ];
     }
 
-    public function getCssPaths()
+    public function getCssPaths() : array
     {
         return [
             '/bundles/quicktranslate/css/quick-translate.css'

@@ -24,7 +24,7 @@ class DefaultController extends FrontendController
         $authKey = WebsiteSetting::getByName("deepl_auth_key") ? WebsiteSetting::getByName("deepl_auth_key")->getData() : null;
         $type = WebsiteSetting::getByName("deepl_type") ? WebsiteSetting::getByName("deepl_type")->getData() : null;
 
-        return JsonResponse::create([
+        return new JsonResponse([
             "authKey" => $authKey,
             "exists" => (($authKey == null || "") ? false : true),
             "type" => $type,
@@ -66,7 +66,7 @@ class DefaultController extends FrontendController
 
         }
 
-        return JsonResponse::create([
+        return new JsonResponse([
             "glossaries" => $glossaries
         ]);
     }
