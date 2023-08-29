@@ -36,7 +36,7 @@ class DocumentController extends FrontendController
             $exists = false;
         }
 
-        return JsonResponse::create([
+        return new JsonResponse([
             "exists" => $exists
         ]);
 
@@ -91,14 +91,14 @@ class DocumentController extends FrontendController
         }
 
         if(isset($elements)){
-            return JsonResponse::create([
+            return new JsonResponse([
                 "elements" => $elements,
                 "langTo" => ($isBrick ? $langTo : null),
                 "type" => ($isBrick ? $type : null)
             ]);
         }
         else{
-            return JsonResponse::create([
+            return new JsonResponse([
                 // "elements" => $elements[] = (object)[],
                 // "langTo" => ($isBrick ? $langTo : null),
                 // "type" => ($isBrick ? $type : null)
@@ -124,7 +124,7 @@ class DocumentController extends FrontendController
 
         $document->save();
 
-        return JsonResponse::create([
+        return new JsonResponse([
             "success" => true
         ]);
 
@@ -246,7 +246,7 @@ class DocumentController extends FrontendController
                 }
             }
 
-            return JsonResponse::create([
+            return new JsonResponse([
                 'success' => $success,
                 'id' => $document->getId(),
                 'type' => $document->getType(),
@@ -254,7 +254,7 @@ class DocumentController extends FrontendController
             ]);
 
         } else {
-            return JsonResponse::create([
+            return new JsonResponse([
                 'success' => $success,
                 'message' => $errorMessage
             ]);
