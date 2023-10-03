@@ -146,7 +146,8 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
                                                     xmlStr += str;
 
                                                 } else if (typeof data[field] === "string") {
-                                                    var str = "<" + field + " quick-t-tag='" + field + "'>" + data[field] + "</" + field + ">";
+                                                    var escaped = data[field].replace(/>/g, "(gT)").replace(/</g, "(lT)");
+                                                    var str = "<" + field + " quick-t-tag='" + field + "'>" + escaped + "</" + field + ">";
                                                     xmlStr += str;
                                                 }
                                             }

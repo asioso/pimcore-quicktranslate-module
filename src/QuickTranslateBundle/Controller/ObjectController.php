@@ -66,10 +66,10 @@ class ObjectController extends FrontendController
 
             $item->save();
 
-            return JsonResponse::create("true");
+            return new JsonResponse("true");
 
         } catch (\Exception $e) {
-            return JsonResponse::create("false");
+            return new JsonResponse("false");
         }
 
     }

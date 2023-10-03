@@ -13,7 +13,10 @@ function xmlRegReplace(xml, replaceBack = false) {
         return xml.replace(/\(AmPnBsP\);/g, "&nbsp;")
             .replace(/\(br\)/g, '<br />')
             .replace(/AmP;/g, "&amp;")
-            .replace(/\(HaShTaG\)/g, "#");
+            .replace(/\(HaShTaG\)/g, "#")
+            .replace(/\(gT\)/g, ">")
+            .replace(/\(lT\)/g, "<")
+            .replace(/\(sC\)/g, ";");
     }
 
     return xml.replace(/\s\s+/g, "")
@@ -22,5 +25,6 @@ function xmlRegReplace(xml, replaceBack = false) {
         .replace(/<br( \/)?>/g, "(br)")
         .replace(/&amp;/g, "AmP;")
         .replace(/ & /g, "AmP;")
-        .replace(/#/g, "(HaShTaG)");
+        .replace(/#/g, "(HaShTaG)")
+        .replace(/;/g, "(sC)");
 };

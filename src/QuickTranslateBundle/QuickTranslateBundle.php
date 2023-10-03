@@ -12,19 +12,19 @@ namespace Asioso\QuickTranslateBundle;
 
 use PackageVersions\Versions;
 use Pimcore\Extension\Bundle\AbstractPimcoreBundle;
-use Pimcore\Extension\Bundle\PimcoreBundleInterface;
+use Pimcore\Extension\Bundle\PimcoreBundleAdminClassicInterface;
+use Pimcore\Extension\Bundle\Traits\BundleAdminClassicTrait;
 use Pimcore\Extension\Bundle\Traits\PackageVersionTrait;
 
-class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundleInterface
+class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundleAdminClassicInterface
 {
-
-    use PackageVersionTrait;
+    use BundleAdminClassicTrait;
     const PACKAGE_NAME = 'asioso/pimcore-quicktranslate-module';
 
-    public function getJsPaths()
+    public function getJsPaths() : array
     {
         return [
-            'https://code.jquery.com/jquery-3.6.0.min.js',
+            '/bundles/quicktranslate/js/pimcore/jquery-3.6.0.min.js',
             '/bundles/quicktranslate/js/pimcore/startup.js',
             '/bundles/quicktranslate/js/quick-translate-btn/quickTranslateObjectBtn.js',
             '/bundles/quicktranslate/js/quick-translate-btn/quickTranslateDocument.js',
@@ -39,7 +39,7 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
         ];
     }
 
-    public function getEditmodeJsPaths()
+    public function getEditmodeJsPaths() : array
     {
 
         return [
@@ -55,14 +55,14 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
 
     }
 
-    public function getEditmodeCssPaths()
+    public function getEditmodeCssPaths() : array
     {
         return [
             '/bundles/quicktranslate/css/quick-translate.css'
         ];
     }
 
-    public function getCssPaths()
+    public function getCssPaths() : array
     {
         return [
             '/bundles/quicktranslate/css/quick-translate.css'
@@ -70,7 +70,7 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
     }
 
 
-    public function getNiceName()
+    public function getNiceName() : string
     {
         return 'Asioso - QuickTranslate Bundle';
     }
@@ -80,7 +80,7 @@ class QuickTranslateBundle extends AbstractPimcoreBundle implements PimcoreBundl
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription() : string
     {
         return "";
     }
