@@ -215,7 +215,6 @@ function quickTranslateDocument(documentTranslate) {
                                                                         });
 
 
-                                                                        xml = xmlRegReplace(xml);
 
                                                                         var tempWrapper = document.createElement("tempWrapper");
 
@@ -239,6 +238,7 @@ function quickTranslateDocument(documentTranslate) {
                                                                         };
 
                                                                         xml = tempWrapper.innerHTML.toString();
+                                                                        xml = xmlRegReplace(xml);
 
                                                                         /* if request is to large, divides it into more requests */
                                                                         if (xml.length > 4500) {
