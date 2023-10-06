@@ -18,7 +18,7 @@ function xmlRegReplace(xml, replaceBack = false) {
 
     return xml.replace(/\s\s+/g, "")
         .replace(/\r?\n|\r/g, " ")
-        .replace(/&nbsp;/g, "(AmPnBsP);")
+        .replace(/&nbsp;/g, " ")
         .replace(/<br( \/)?>/g, "(br)")
         .replace(/&amp;/g, "AmP;")
         .replace(/ & /g, "AmP;")
