@@ -206,9 +206,6 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                                     xml += '<' + key + ' quick-t-tag="' + key + '"  quick-t-type="' + data.elements[key]["type"] + '">' + data.elements[key]["data"] + '</' + key + '>';
                                                 });
 
-
-                                                xml = xmlRegReplace(xml);
-
                                                 var tempWrapper = document.createElement("tempWrapper");
 
                                                 tempWrapper.innerHTML = xml;
@@ -230,6 +227,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                                 };
 
                                                 xml = tempWrapper.innerHTML.toString();
+                                                xml = xmlRegReplace(xml);
 
                                                 /* if request is to large, divides it into more requests */
                                                 if (xml.length > 4500) {

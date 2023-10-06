@@ -36,7 +36,7 @@ class DocumentController extends FrontendController
             $exists = false;
         }
 
-        return JsonResponse::create([
+        return new JsonResponse([
             "exists" => $exists
         ]);
 
@@ -53,17 +53,17 @@ class DocumentController extends FrontendController
         $document = Document::getById($request->get("id"));
 
         if ($isBrick) {
-            $id = $document->getContentMasterDocumentId() != null ? $document->getContentMasterDocumentId() : $document->getId();
+            $id = $document->getContentMainDocumentId() != null ? $document->getContentMainDocumentId() : $document->getId();
 
             $brickName = $request->get("brickName");
-            $elems = $db->fetchAll("SELECT name, type, data
+            $elems = $db->fetchAllAssociative("SELECT name, type, data
                                         FROM documents_editables
                                         WHERE documentId=" . $document->getId() . " AND (type='input' OR type='textarea' OR type='wysiwyg') AND name LIKE '" . $brickName . "%'");
 
-            if ($elems == null && $document->getContentMasterDocumentId() != null) {
-                $elems = $db->fetchAll("SELECT name, type, data
+            if ($elems == null && $document->getContentMainDocumentId() != null) {
+                $elems = $db->fetchAllAssociative("SELECT name, type, data
                                         FROM documents_editables
-                                        WHERE documentId=" . $document->getContentMasterDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg') AND name LIKE '" . $brickName . "%'");
+                                        WHERE documentId=" . $document->getContentMainDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg') AND name LIKE '" . $brickName . "%'");
             }
 
             $langTo = $document->getProperty("language");
@@ -71,14 +71,14 @@ class DocumentController extends FrontendController
 
         } else {
 
-            $elems = $db->fetchAll("SELECT name, type, data
+            $elems = $db->fetchAllAssociative("SELECT name, type, data
                                         FROM documents_editables
                                         WHERE documentId=" . $request->get("id") . " AND (type='input' OR type='textarea' OR type='wysiwyg')");
 
-            if ($elems == null && $document->getContentMasterDocumentId() != null) {
-                $elems = $db->fetchAll("SELECT name, type, data
+            if ($elems == null && $document->getContentMainDocumentId() != null) {
+                $elems = $db->fetchAllAssociative("SELECT name, type, data
                                         FROM documents_editables
-                                        WHERE documentId=" . $document->getContentMasterDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg')");
+                                        WHERE documentId=" . $document->getContentMainDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg')");
             }
         }
 
@@ -91,14 +91,14 @@ class DocumentController extends FrontendController
         }
 
         if(isset($elements)){
-            return JsonResponse::create([
+            return new JsonResponse([
                 "elements" => $elements,
                 "langTo" => ($isBrick ? $langTo : null),
                 "type" => ($isBrick ? $type : null)
             ]);
         }
         else{
-            return JsonResponse::create([
+            return new JsonResponse([
                 // "elements" => $elements[] = (object)[],
                 // "langTo" => ($isBrick ? $langTo : null),
                 // "type" => ($isBrick ? $type : null)
@@ -124,7 +124,7 @@ class DocumentController extends FrontendController
 
         $document->save();
 
-        return JsonResponse::create([
+        return new JsonResponse([
             "success" => true
         ]);
 
@@ -246,7 +246,7 @@ class DocumentController extends FrontendController
                 }
             }
 
-            return JsonResponse::create([
+            return new JsonResponse([
                 'success' => $success,
                 'id' => $document->getId(),
                 'type' => $document->getType(),
@@ -254,7 +254,7 @@ class DocumentController extends FrontendController
             ]);
 
         } else {
-            return JsonResponse::create([
+            return new JsonResponse([
                 'success' => $success,
                 'message' => $errorMessage
             ]);

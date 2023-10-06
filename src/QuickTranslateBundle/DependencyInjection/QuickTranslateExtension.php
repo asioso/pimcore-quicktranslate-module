@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 
 /**
  * This is the class that loads and manages your bundle configuration.
@@ -22,6 +23,17 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class QuickTranslateExtension extends Extension
 {
+
+    public function prepend(ContainerBuilder $container): void
+    {
+        $security = $container->getExtensionConfig('pimcore_admin');
+        $security[0]['admin_csp_header']['additional_urls']['connect-src'] = [
+            0 => 'https://api-free.deepl.com/v2/translate',
+            1 => 'https://api.deepl.com/v2/translate'
+        ];
+        $container->loadFromExtension('pimcore_admin', $security[0]);
+    }
+
     /**
      * {@inheritdoc}
      */

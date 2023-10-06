@@ -9,21 +9,23 @@
 
 pimcore.registerNS("pimcore.plugin.asiosoQuickTranslateBundle");
 
-pimcore.plugin.asiosoQuickTranslateBundle = Class.create(pimcore.plugin.admin, {
+pimcore.plugin.asiosoQuickTranslateBundle = Class.create({
     getClassName: function () {
         return "pimcore.plugin.asiosoQuickTranslateBundle";
     },
 
     initialize: function () {
-        pimcore.plugin.broker.registerPlugin(this);
+        document.addEventListener(pimcore.events.postOpenObject, this.postOpenObject.bind(this));
+        document.addEventListener(pimcore.events.postOpenDocument, this.postOpenDocument.bind(this));
     },
 
     pimcoreReady: function (params, broker) {
 
     },
 
-    postOpenObject: function (object, type) {
+    postOpenObject: function (event) {
         /* add quickTranslate icon to objects with localizedfields */
+        const { detail: { object, type } } = event;
         if (type === "object") {
             if (object.data.data.hasOwnProperty("localizedfields")) {
                 object.tabbar.add(new pimcore.element.quickTranslateObjectBtn(object, "object").getLayout());
@@ -45,8 +47,9 @@ pimcore.plugin.asiosoQuickTranslateBundle = Class.create(pimcore.plugin.admin, {
     },
 
 
-    postOpenDocument: function (document, type) {
+    postOpenDocument: function (event) {
         /* add quicktranslate button to specific document type */
+        const { detail: { document, type } } = event;
         if (type == "page" || type == "snippet" || type == "printpage") {
 
             /* checks if document language is supported by deepl and ads the button if it is */
@@ -55,7 +58,7 @@ pimcore.plugin.asiosoQuickTranslateBundle = Class.create(pimcore.plugin.admin, {
                     this.docBtn(document);
                 }*/
             } else {
-                if (isDeeplLanguage(document.data.properties["language"]["data"])) {
+                if (document.data.properties["language"] && isDeeplLanguage(document.data.properties["language"]["data"])) {
                     this.docBtn(document);
                 }
             }
