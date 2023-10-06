@@ -29,9 +29,9 @@ With DeepL the following languages can currently be translated:
 * Swedish
  
 ## Prerequisites
-* PHP 7.1 or higher (https://secure.php.net/)
+* PHP 8.1 or higher (https://secure.php.net/)
 * Composer (https://getcomposer.org/download/)
-* A Pimcore  Installation (v5 or higher)
+* A Pimcore  Installation (v11 or higher)
 * DeepL account
 
 
