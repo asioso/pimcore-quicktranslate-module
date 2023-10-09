@@ -40,6 +40,12 @@ function isDeeplLanguage(lang) {
         "sk",
         "sl",
         "sv",
+        // again new languages
+        "id",
+        "ko",
+        "nb",
+        "tr",
+        "ua"
     ];
 
     return deeplLanguages.includes(lang);
