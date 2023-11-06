@@ -19,7 +19,7 @@ With DeepL the following languages can currently be translated:
 * Danish
 * Greek
 * Estonian
-* Finish
+* Finnish
 * Hungarian
 * Lithuanian
 * Latvian
@@ -27,6 +27,11 @@ With DeepL the following languages can currently be translated:
 * Slovak
 * Slovenian
 * Swedish
+* Indonesian
+* Korean
+* Norwegian (Bokmål)
+* Turkish
+* Ukrainian
  
 ## Prerequisites
 * PHP 8.1 or higher (https://secure.php.net/)
