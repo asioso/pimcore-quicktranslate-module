@@ -45,7 +45,7 @@ function isDeeplLanguage(lang) {
         "ko",
         "nb",
         "tr",
-        "ua"
+        "uk"
     ];
 
     return deeplLanguages.includes(lang);
