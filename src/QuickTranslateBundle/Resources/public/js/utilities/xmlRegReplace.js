@@ -20,7 +20,7 @@ function xmlRegReplace(xml, replaceBack = false) {
         .replace(/\r?\n|\r/g, " ")
         .replace(/&nbsp;/g, " ")
         .replace(/<br( \/)?>/g, "(br)")
-        .replace(/&amp;/g, "AmP;")
-        .replace(/ & /g, "AmP;")
+        .replace(/&amp;/g, "%26")
+        .replace(/&/g, "%26")
         .replace(/#/g, "(HaShTaG)");
 };
