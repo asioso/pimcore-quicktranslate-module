@@ -53,6 +53,7 @@ function createDeeplApiUrl(key, type, data, langFrom = null, langTo, autoDetect 
     if(glossaryId) {
         glossaryPart = '&glossary_id=' + glossaryId;
     }
+    data = encodeURIComponent(data)
 
     if (autoDetect) {
         return url + '/v2/translate?auth_key=' + key + '&text=' + data + '&target_lang=' + langTo + '&split_sentences=nonewlines&tag_handling=xml' + glossaryPart;
