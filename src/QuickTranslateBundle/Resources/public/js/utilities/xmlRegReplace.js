@@ -19,8 +19,5 @@ function xmlRegReplace(xml, replaceBack = false) {
     return xml.replace(/\s\s+/g, "")
         .replace(/\r?\n|\r/g, " ")
         .replace(/&nbsp;/g, " ")
-        .replace(/<br( \/)?>/g, "(br)")
-        .replace(/&amp;/g, "%26")
-        .replace(/&/g, "%26")
-        .replace(/#/g, "(HaShTaG)");
+        .replace(/<br( \/)?>/g, "(br)");
 };
