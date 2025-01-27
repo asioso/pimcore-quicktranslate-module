@@ -89,7 +89,7 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
                                                 if (elementData[item].length && element.data.localizedfields.data[langs[0]]) {
                                                     let localizedFields = element.data.localizedfields.data[langs[0]];
                                                     for (let field in localizedFields) {
-                                                        localizedFields[`structuredData#.${item}.${index}.${element.type}.${field}`] = localizedFields[field];
+                                                        localizedFields[`structuredData---.${item}.${index}.${element.type}.${field}`] = localizedFields[field];
                                                         delete localizedFields[field];
                                                     }
                                                     data = {...data, ...localizedFields}
@@ -101,7 +101,7 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
                                             let localizedFields = elementData[item].data[langs[0]];
                                             for (let storeObject in localizedFields) {
                                                 for (let field in localizedFields[storeObject]) {
-                                                    localizedFields[storeObject][`classificationStore#.${storeObject}.${item}.${field}`] = localizedFields[storeObject][field];
+                                                    localizedFields[storeObject][`classificationStore---.${storeObject}.${item}.${field}`] = localizedFields[storeObject][field];
                                                     delete localizedFields[storeObject][field];
                                                 }
                                                 data = { ...data, ...localizedFields[storeObject] }
