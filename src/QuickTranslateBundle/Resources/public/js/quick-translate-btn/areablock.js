@@ -159,9 +159,16 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                 var brickName = this.name + ":" + element.key + ".";
                 var documentId = pimcore_document_id;
 
-                    var checkerSettings = createDeeplApiSettings("translate", "DE", "EN");
+                var checkerSettings = createDeeplApiSettings("translate", "DE", "EN");
 
-                    $.ajax(checkerSettings).done(function () {
+                Ext.Ajax.request({
+                    url: '/asioso_quick_translate_text',
+                    method: 'POST',
+                    params: checkerSettings.data,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    success: function(response) {
 
                         var elementsWindow = quickTranslatecreateWindow("Processing", "Getting your content ready for translation...");
 
@@ -233,16 +240,22 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                             for (var i = 0; i < partsToTranslate.length; i++) {
                                                 var settings = createDeeplApiSettings(partsToTranslate[i], null, langTo, true);
 
-                                                $.ajax(settings).done(function (response) {
+                                                Ext.Ajax.request({
+                                                    url: '/asioso_quick_translate_text',
+                                                    method: 'POST',
+                                                    params: settings.data,
+                                                    headers: {
+                                                        "Content-Type": "application/json"
+                                                    },
+                                                    success: function(response) {
 
-                                                    translatedParts.push(response.translations[0].text);
-                                                    progressBar[0].updateProgress(translatedParts.length / partsToTranslate.length, "Translating: " + translatedParts.length + " of " + partsToTranslate.length);
-
-                                                }).fail(function () {
-
-                                                    translatedParts.push(null);
-                                                    progressBar[0].updateProgress(translatedParts.length / partsToTranslate.length, "Translating: " + translatedParts.length + "/" + partsToTranslate.length);
-
+                                                        translatedParts.push(response.translations[0].text);
+                                                        progressBar[0].updateProgress(translatedParts.length / partsToTranslate.length, "Translating: " + translatedParts.length + " of " + partsToTranslate.length);
+                                                    },
+                                                    failure: function(response) {
+                                                        translatedParts.push(null);
+                                                        progressBar[0].updateProgress(translatedParts.length / partsToTranslate.length, "Translating: " + translatedParts.length + "/" + partsToTranslate.length);
+                                                    }
                                                 });
 
                                             }
@@ -359,56 +372,66 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
 
                                                 var translatingWindow = quickTranslatecreateWindow("Translating", "Translating your brick...");
 
-                                                $.ajax(settings).done(function (response) {
-                                                    elems = xmlToJson(response.translations[0].text, srcSet, true);
+                                                Ext.Ajax.request({
+                                                    url: '/asioso_quick_translate_text',
+                                                    method: 'POST',
+                                                    params: settings.data,
+                                                    headers: {
+                                                        "Content-Type": "application/json"
+                                                    },
+                                                    success: function(response) {
+                                                        var response = Ext.decode(response.responseText);
 
-                                                    translatingWindow.destroy();
+                                                        elems = xmlToJson(response.translations[0].text, srcSet, true);
 
-                                                    var savingWindow = quickTranslatecreateWindow("Saving", "Saving your translated brick...");
+                                                        translatingWindow.destroy();
 
-                                                    Ext.Ajax.request({
-                                                        url: "/asioso_quick_translate_brick",
-                                                        method: 'POST',
-                                                        params: {
-                                                            id: documentId,
-                                                            elements: elems
-                                                        },
-                                                        success: function () {
+                                                        var savingWindow = quickTranslatecreateWindow("Saving", "Saving your translated brick...");
 
-                                                            savingWindow.destroy();
+                                                        Ext.Ajax.request({
+                                                            url: "/asioso_quick_translate_brick",
+                                                            method: 'POST',
+                                                            params: {
+                                                                id: documentId,
+                                                                elements: elems
+                                                            },
+                                                            success: function () {
 
-                                                            var window = new Ext.window.Window({
-                                                                minHeight: 150,
-                                                                minWidth: 350,
-                                                                maxWidth: 700,
-                                                                modal: true,
-                                                                layout: 'fit',
-                                                                bodyStyle: "padding: 10px;",
-                                                                title: "Success",
-                                                                html: "Yor brick was successfully translated and saved. To see your changes click reload!",
-                                                                buttons: [
-                                                                    {
-                                                                        text: 'Reload',
-                                                                        handler: function () {
-                                                                            reloadDocument(documentId, data.type);
+                                                                savingWindow.destroy();
+
+                                                                var window = new Ext.window.Window({
+                                                                    minHeight: 150,
+                                                                    minWidth: 350,
+                                                                    maxWidth: 700,
+                                                                    modal: true,
+                                                                    layout: 'fit',
+                                                                    bodyStyle: "padding: 10px;",
+                                                                    title: "Success",
+                                                                    html: "Yor brick was successfully translated and saved. To see your changes click reload!",
+                                                                    buttons: [
+                                                                        {
+                                                                            text: 'Reload',
+                                                                            handler: function () {
+                                                                                reloadDocument(documentId, data.type);
+                                                                            }
                                                                         }
-                                                                    }
-                                                                ]
-                                                            });
+                                                                    ]
+                                                                });
 
-                                                            window.show();
+                                                                window.show();
 
-                                                        }.bind(this),
+                                                            }.bind(this),
 
-                                                        failure: function () {
-                                                            savingWindow.destroy();
-                                                            quickTranslatecreateWindow("Error", "We encountered an error while saving your translated brick. Internal server error.");
-                                                        }
-                                                    });
-
-                                                }).fail(function () {
-                                                    translatingWindow.destroy();
-                                                    quickTranslatecreateWindow("Error", "We couldn't translate your brick. Either the brick is too large or you have a malformed structure!");
+                                                            failure: function () {
+                                                                savingWindow.destroy();
+                                                                quickTranslatecreateWindow("Error", "We encountered an error while saving your translated brick. Internal server error.");
+                                                            }
+                                                        });
+                                                    },
+                                                    failure: function(response) {
+                                                        translatingWindow.destroy();
+                                                        quickTranslatecreateWindow("Error", "We couldn't translate your brick. Either the brick is too large or you have a malformed structure!");
+                                                    }
                                                 });
                                             };
 
@@ -434,8 +457,9 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                             }
 
                         });
+                    },
 
-                    }).fail(function () {
+                    failure: function(response) {
 
                         var status = response.status;
 
@@ -454,9 +478,8 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                 quickTranslatecreateWindow("Connection error", "There seems to be a problem connecting to the DeepL service. Try again later.");
                                 break;
                         }
-
-                    });
-
+                    }
+                });
             }.bind(this, element)
         });
 

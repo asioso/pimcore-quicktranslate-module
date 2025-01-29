@@ -38,7 +38,7 @@ class DefaultController extends FrontendController
     /* used to check if deepl authentication key exists */
     public function getAuthKeyAction()
     {
-        return JsonResponse::create([
+        return new JsonResponse([
             "authKey" => $this->authKey,
             "exists" => (($this->authKey == null || "") ? false : true),
             "type" => $this->type,
@@ -74,7 +74,7 @@ class DefaultController extends FrontendController
 
         }
 
-        return JsonResponse::create([
+        return new JsonResponse([
             "glossaries" => $glossaries
         ]);
     }
