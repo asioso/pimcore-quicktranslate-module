@@ -159,346 +159,330 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                 var brickName = this.name + ":" + element.key + ".";
                 var documentId = pimcore_document_id;
 
+                var checkerSettings = createDeeplApiSettings("translate", "DE", "EN");
+
                 Ext.Ajax.request({
-                    url: "/asioso_quick_translate_get_auth_key",
-                    success: function (response) {
-                        var authKey = Ext.decode(response.responseText);
+                    url: '/asioso_quick_translate_text',
+                    method: 'POST',
+                    params: checkerSettings.data,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    success: function(response) {
 
-                        if (authKey.exists) {
+                        var elementsWindow = quickTranslatecreateWindow("Processing", "Getting your content ready for translation...");
 
-                            var key = authKey.authKey;
-                            var type = "FREE";
-                            if (authKey.type_exists) {
-                                type = authKey.type;
-                            }
-                            var checkerUrl = createDeeplApiUrl(key, type, "", "DE", "EN");
+                        Ext.Ajax.request({
+                            url: "/asioso_quick_translate_get_document_elements",
+                            method: 'GET',
+                            params: {
+                                id: documentId,
+                                isBrick: true,
+                                brickName: brickName
+                            },
 
-                            /* settings for checker request to deepl */
-                            var checkerSettings = {
-                                "async": true,
-                                "crossDomain": true,
-                                "url": checkerUrl,
-                                "method": "GET",
-                                "headers": {},
-                            };
-                            $.ajax(checkerSettings).done(function () {
+                            success: function (response) {
+                                var data = JSON.parse(response.responseText);
 
-                                var elementsWindow = quickTranslatecreateWindow("Processing", "Getting your content ready for translation...");
+                                if (isDeeplLanguage(data.langTo)) {
+                                    if (data.elements != null) {
 
-                                Ext.Ajax.request({
-                                    url: "/asioso_quick_translate_get_document_elements",
-                                    method: 'GET',
-                                    params: {
-                                        id: documentId,
-                                        isBrick: true,
-                                        brickName: brickName
-                                    },
+                                        var xml = "";
 
-                                    success: function (response) {
-                                        var data = JSON.parse(response.responseText);
+                                        Object.keys(data.elements).forEach(function (key) {
+                                            xml += '<' + key + ' quick-t-tag="' + key + '"  quick-t-type="' + data.elements[key]["type"] + '">' + data.elements[key]["data"] + '</' + key + '>';
+                                        });
 
-                                        if (isDeeplLanguage(data.langTo)) {
-                                            if (data.elements != null) {
+                                        var tempWrapper = document.createElement("tempWrapper");
 
-                                                var xml = "";
+                                        tempWrapper.innerHTML = xml;
 
-                                                Object.keys(data.elements).forEach(function (key) {
-                                                    xml += '<' + key + ' quick-t-tag="' + key + '"  quick-t-type="' + data.elements[key]["type"] + '">' + data.elements[key]["data"] + '</' + key + '>';
+                                        var srcSet = [];
+                                        Array.from(tempWrapper.getElementsByTagName("img")).forEach(function (image) {
+                                            srcSet.push(image.src);
+                                            image.src = "";
+                                        });
+
+                                        var langTo = data.langTo;
+
+                                        xml = tempWrapper.innerHTML.toString();
+                                        xml = xmlRegReplace(xml);
+
+                                        /* if request is to large, divides it into more requests */
+                                        if (xml.length > 4500) {
+
+                                            var partsToTranslate = [];
+
+                                            var i = 0;
+                                            var inputs = [];
+
+                                            tempWrapper.childNodes.forEach(function (child) {
+                                                var input = document.createElement(child.getAttribute("quick-t-tag"));
+
+                                                input.setAttribute("quick-t-type", child.getAttribute("quick-t-type"));
+                                                input.setAttribute("quick-t-tag", child.getAttribute("quick-t-tag"));
+
+                                                inputs.push(input);
+
+                                                child.childNodes.forEach(function (subChild) {
+                                                    var part = "<" + child.localName + " quickt-sort=\"" + i + "\" quick-t-tag=\"" + child.getAttribute("quick-t-tag") + "\">" + (subChild.outerHTML || subChild.data) + "</" + child.localName + ">";
+                                                    partsToTranslate.push(part);
+                                                    i++;
+                                                });
+                                            });
+
+                                            var translatedParts = [];
+
+                                            elementsWindow.destroy();
+
+                                            var progressBar = quickTranslateProgressBar();
+
+                                            for (var i = 0; i < partsToTranslate.length; i++) {
+                                                var settings = createDeeplApiSettings(partsToTranslate[i], null, langTo, true);
+
+                                                Ext.Ajax.request({
+                                                    url: '/asioso_quick_translate_text',
+                                                    method: 'POST',
+                                                    params: settings.data,
+                                                    headers: {
+                                                        "Content-Type": "application/json"
+                                                    },
+                                                    success: function(response) {
+                                                        var responseText = Ext.decode(response.responseText);
+                                                        translatedParts.push(responseText.translations[0].text);
+                                                        progressBar[0].updateProgress(translatedParts.length / partsToTranslate.length, "Translating: " + translatedParts.length + " of " + partsToTranslate.length);
+                                                    },
+                                                    failure: function(response) {
+                                                        translatedParts.push(null);
+                                                        progressBar[0].updateProgress(translatedParts.length / partsToTranslate.length, "Translating: " + translatedParts.length + "/" + partsToTranslate.length);
+                                                    }
                                                 });
 
-                                                var tempWrapper = document.createElement("tempWrapper");
+                                            }
 
-                                                tempWrapper.innerHTML = xml;
+                                            /* waits for all the requests to either return the translation or null */
+                                            var interval = setInterval(function () {
+                                                if (translatedParts.length === partsToTranslate.length) {
 
-                                                var srcSet = [];
-                                                Array.from(tempWrapper.getElementsByTagName("img")).forEach(function (image) {
-                                                    srcSet.push(image.src);
-                                                    image.src = "";
-                                                });
+                                                    var translatedElements = "Translated elements: " + translatedParts.filter(function (part) {
+                                                        return part != null;
+                                                    }).length;
 
-                                                var langTo = data.langTo;
+                                                    var notTranslatedElements = "Not translated elements: " + translatedParts.filter(function (part) {
+                                                        return part == null;
+                                                    }).length;
 
-                                                var settings = {
-                                                    "async": true,
-                                                    "crossDomain": true,
-                                                    "url": "",
-                                                    "method": "GET",
-                                                    "headers": {},
-                                                };
+                                                    /* if too many elements couldn't be translated don't save the document */
+                                                    if (translatedElements > notTranslatedElements) {
 
-                                                xml = tempWrapper.innerHTML.toString();
-                                                xml = xmlRegReplace(xml);
-
-                                                /* if request is to large, divides it into more requests */
-                                                if (xml.length > 4500) {
-
-                                                    var partsToTranslate = [];
-
-                                                    var i = 0;
-                                                    var inputs = [];
-
-                                                    tempWrapper.childNodes.forEach(function (child) {
-                                                        var input = document.createElement(child.getAttribute("quick-t-tag"));
-
-                                                        input.setAttribute("quick-t-type", child.getAttribute("quick-t-type"));
-                                                        input.setAttribute("quick-t-tag", child.getAttribute("quick-t-tag"));
-
-                                                        inputs.push(input);
-
-                                                        child.childNodes.forEach(function (subChild) {
-                                                            var part = "<" + child.localName + " quickt-sort=\"" + i + "\" quick-t-tag=\"" + child.getAttribute("quick-t-tag") + "\">" + (subChild.outerHTML || subChild.data) + "</" + child.localName + ">";
-                                                            partsToTranslate.push(part);
-                                                            i++;
-                                                        });
-                                                    });
-
-                                                    var translatedParts = [];
-
-                                                    elementsWindow.destroy();
-
-                                                    var progressBar = quickTranslateProgressBar();
-
-                                                    for (var i = 0; i < partsToTranslate.length; i++) {
-                                                        var url = createDeeplApiUrl(key, type, partsToTranslate[i], null, langTo, true);
-                                                        settings.url = url;
-
-                                                        $.ajax(settings).done(function (response) {
-
-                                                            translatedParts.push(response.translations[0].text);
-                                                            progressBar[0].updateProgress(translatedParts.length / partsToTranslate.length, "Translating: " + translatedParts.length + " of " + partsToTranslate.length);
-
-                                                        }).fail(function () {
-
-                                                            translatedParts.push(null);
-                                                            progressBar[0].updateProgress(translatedParts.length / partsToTranslate.length, "Translating: " + translatedParts.length + "/" + partsToTranslate.length);
-
+                                                        var collator = new Intl.Collator(undefined, {
+                                                            numeric: true,
+                                                            sensitivity: "base"
                                                         });
 
+                                                        translatedParts.sort(collator.compare);
+
+                                                        var helper = document.createElement("div");
+
+                                                        helper.innerHTML = translatedParts.map(function (part) {
+                                                            return part.replace(/quickt-sort="[0-9]"*/, "");
+                                                        }).join("");
+
+                                                        inputs.forEach(function (input) {
+                                                            helper.childNodes.forEach(function (child) {
+                                                                if (child.getAttribute("quick-t-tag") === input.getAttribute("quick-t-tag")) {
+                                                                    input.innerHTML += child.innerHTML;
+                                                                }
+                                                            })
+                                                        });
+
+                                                        var xml = inputs.map(function (input) {
+                                                            return input.outerHTML;
+                                                        }).join("");
+
+                                                        helper.remove();
+
+                                                        elems = xmlToJson(xml, srcSet, true);
+
+                                                        progressBar[0].text = "";
+                                                        progressBar[0].updateProgress(100, "Saving");
+
+                                                        Ext.Ajax.request({
+                                                            url: "/asioso_quick_translate_brick",
+                                                            method: 'POST',
+                                                            params: {
+                                                                id: documentId,
+                                                                elements: elems
+                                                            },
+
+                                                            success: function () {
+                                                                progressBar[1].destroy();
+
+                                                                var window = new Ext.window.Window({
+                                                                    minHeight: 150,
+                                                                    minWidth: 350,
+                                                                    maxWidth: 700,
+                                                                    modal: true,
+                                                                    layout: 'fit',
+                                                                    bodyStyle: "padding: 10px;",
+                                                                    title: "Success",
+                                                                    html: "Yor brick was successfully translated and saved. To see your changes click reload!",
+                                                                    buttons: [
+                                                                        {
+                                                                            text: 'Reload',
+                                                                            handler: function () {
+                                                                                reloadDocument(documentId, data.type);
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                });
+
+                                                                window.show();
+
+                                                                if (translatedParts.includes(null)) {
+                                                                    window.html = "Your brick was successfully saved, but we couldn't translate all the elements!<br><br>" + translatedElements + "<br>" + notTranslatedElements + "<br><br>To see your changes click reload!";
+                                                                } else {
+                                                                    window.html = "Your brick was successfully translated and saved! To see your changes click reload!";
+                                                                }
+
+                                                            },
+
+                                                            failure: function () {
+                                                                progressBar[1].destroy();
+                                                                quickTranslatecreateWindow("Error", "We couldn't translate your document. Internal server error!");
+                                                            }
+                                                        });
+
+                                                    } else {
+                                                        progressBar[1].destroy();
+                                                        quickTranslatecreateWindow("Error", "We couldn't translate your document. Check your internet connection and that you haven't exceeded the maximum amount of translatable characters!");
                                                     }
 
-                                                    /* waits for all the requests to either return the translation or null */
-                                                    var interval = setInterval(function () {
-                                                        if (translatedParts.length === partsToTranslate.length) {
-
-                                                            var translatedElements = "Translated elements: " + translatedParts.filter(function (part) {
-                                                                return part != null;
-                                                            }).length;
-
-                                                            var notTranslatedElements = "Not translated elements: " + translatedParts.filter(function (part) {
-                                                                return part == null;
-                                                            }).length;
-
-                                                            /* if too many elements couldn't be translated don't save the document */
-                                                            if (translatedElements > notTranslatedElements) {
-
-                                                                var collator = new Intl.Collator(undefined, {
-                                                                    numeric: true,
-                                                                    sensitivity: "base"
-                                                                });
-
-                                                                translatedParts.sort(collator.compare);
-
-                                                                var helper = document.createElement("div");
-
-                                                                helper.innerHTML = translatedParts.map(function (part) {
-                                                                    return part.replace(/quickt-sort="[0-9]"*/, "");
-                                                                }).join("");
-
-                                                                inputs.forEach(function (input) {
-                                                                    helper.childNodes.forEach(function (child) {
-                                                                        if (child.getAttribute("quick-t-tag") === input.getAttribute("quick-t-tag")) {
-                                                                            input.innerHTML += child.innerHTML;
-                                                                        }
-                                                                    })
-                                                                });
-
-                                                                var xml = inputs.map(function (input) {
-                                                                    return input.outerHTML;
-                                                                }).join("");
-
-                                                                helper.remove();
-
-                                                                elems = xmlToJson(xml, srcSet, true);
-
-                                                                progressBar[0].text = "";
-                                                                progressBar[0].updateProgress(100, "Saving");
-
-                                                                Ext.Ajax.request({
-                                                                    url: "/asioso_quick_translate_brick",
-                                                                    method: 'POST',
-                                                                    params: {
-                                                                        id: documentId,
-                                                                        elements: elems
-                                                                    },
-
-                                                                    success: function () {
-                                                                        progressBar[1].destroy();
-
-                                                                        var window = new Ext.window.Window({
-                                                                            minHeight: 150,
-                                                                            minWidth: 350,
-                                                                            maxWidth: 700,
-                                                                            modal: true,
-                                                                            layout: 'fit',
-                                                                            bodyStyle: "padding: 10px;",
-                                                                            title: "Success",
-                                                                            html: "Yor brick was successfully translated and saved. To see your changes click reload!",
-                                                                            buttons: [
-                                                                                {
-                                                                                    text: 'Reload',
-                                                                                    handler: function () {
-                                                                                        reloadDocument(documentId, data.type);
-                                                                                    }
-                                                                                }
-                                                                            ]
-                                                                        });
-
-                                                                        window.show();
-
-                                                                        if (translatedParts.includes(null)) {
-                                                                            window.html = "Your brick was successfully saved, but we couldn't translate all the elements!<br><br>" + translatedElements + "<br>" + notTranslatedElements + "<br><br>To see your changes click reload!";
-                                                                        } else {
-                                                                            window.html = "Your brick was successfully translated and saved! To see your changes click reload!";
-                                                                        }
-
-                                                                    },
-
-                                                                    failure: function () {
-                                                                        progressBar[1].destroy();
-                                                                        quickTranslatecreateWindow("Error", "We couldn't translate your document. Internal server error!");
-                                                                    }
-                                                                });
-
-                                                            } else {
-                                                                progressBar[1].destroy();
-                                                                quickTranslatecreateWindow("Error", "We couldn't translate your document. Check your internet connection and that you haven't exceeded the maximum amount of translatable characters!");
-                                                            }
-
-                                                            clearInterval(interval);
-                                                        }
-                                                    }, 100);
-
-                                                } else {
-
-                                                    var url = createDeeplApiUrl(key, type, xml, null, langTo, true);
-                                                    settings.url = url;
-
-                                                    function deeplAjax(settings) {
-
-                                                        elementsWindow.destroy();
-
-                                                        var translatingWindow = quickTranslatecreateWindow("Translating", "Translating your brick...");
-
-                                                        $.ajax(settings).done(function (response) {
-                                                            elems = xmlToJson(response.translations[0].text, srcSet, true);
-
-                                                            translatingWindow.destroy();
-
-                                                            var savingWindow = quickTranslatecreateWindow("Saving", "Saving your translated brick...");
-
-                                                            Ext.Ajax.request({
-                                                                url: "/asioso_quick_translate_brick",
-                                                                method: 'POST',
-                                                                params: {
-                                                                    id: documentId,
-                                                                    elements: elems
-                                                                },
-                                                                success: function () {
-
-                                                                    savingWindow.destroy();
-
-                                                                    var window = new Ext.window.Window({
-                                                                        minHeight: 150,
-                                                                        minWidth: 350,
-                                                                        maxWidth: 700,
-                                                                        modal: true,
-                                                                        layout: 'fit',
-                                                                        bodyStyle: "padding: 10px;",
-                                                                        title: "Success",
-                                                                        html: "Yor brick was successfully translated and saved. To see your changes click reload!",
-                                                                        buttons: [
-                                                                            {
-                                                                                text: 'Reload',
-                                                                                handler: function () {
-                                                                                    reloadDocument(documentId, data.type);
-                                                                                }
-                                                                            }
-                                                                        ]
-                                                                    });
-
-                                                                    window.show();
-
-                                                                }.bind(this),
-
-                                                                failure: function () {
-                                                                    savingWindow.destroy();
-                                                                    quickTranslatecreateWindow("Error", "We encountered an error while saving your translated brick. Internal server error.");
-                                                                }
-                                                            });
-
-                                                        }).fail(function () {
-                                                            translatingWindow.destroy();
-                                                            quickTranslatecreateWindow("Error", "We couldn't translate your brick. Either the brick is too large or you have a malformed structure!");
-                                                        });
-                                                    };
-
-                                                    deeplAjax(settings);
+                                                    clearInterval(interval);
                                                 }
+                                            }, 100);
 
-                                                tempWrapper.remove();
-
-                                            } else {
-                                                elementsWindow.destroy();
-                                                quickTranslatecreateWindow("Empty brick", "We couldn't translate your brick beacuse it is empty!");
-                                            }
                                         } else {
-                                            elementsWindow.destroy();
-                                            quickTranslatecreateWindow("Unsuported language", "We couldn't translate your brick beacuse it is in a language not supported by DeepL!");
+
+                                            var settings = createDeeplApiSettings(xml, null, langTo, true);
+
+                                            function deeplAjax(settings) {
+
+                                                elementsWindow.destroy();
+
+                                                var translatingWindow = quickTranslatecreateWindow("Translating", "Translating your brick...");
+
+                                                Ext.Ajax.request({
+                                                    url: '/asioso_quick_translate_text',
+                                                    method: 'POST',
+                                                    params: settings.data,
+                                                    headers: {
+                                                        "Content-Type": "application/json"
+                                                    },
+                                                    success: function(response) {
+                                                        var responseText = Ext.decode(response.responseText);
+
+                                                        elems = xmlToJson(responseText.translations[0].text, srcSet, true);
+
+                                                        translatingWindow.destroy();
+
+                                                        var savingWindow = quickTranslatecreateWindow("Saving", "Saving your translated brick...");
+
+                                                        Ext.Ajax.request({
+                                                            url: "/asioso_quick_translate_brick",
+                                                            method: 'POST',
+                                                            params: {
+                                                                id: documentId,
+                                                                elements: elems
+                                                            },
+                                                            success: function () {
+
+                                                                savingWindow.destroy();
+
+                                                                var window = new Ext.window.Window({
+                                                                    minHeight: 150,
+                                                                    minWidth: 350,
+                                                                    maxWidth: 700,
+                                                                    modal: true,
+                                                                    layout: 'fit',
+                                                                    bodyStyle: "padding: 10px;",
+                                                                    title: "Success",
+                                                                    html: "Yor brick was successfully translated and saved. To see your changes click reload!",
+                                                                    buttons: [
+                                                                        {
+                                                                            text: 'Reload',
+                                                                            handler: function () {
+                                                                                reloadDocument(documentId, data.type);
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                });
+
+                                                                window.show();
+
+                                                            }.bind(this),
+
+                                                            failure: function () {
+                                                                savingWindow.destroy();
+                                                                quickTranslatecreateWindow("Error", "We encountered an error while saving your translated brick. Internal server error.");
+                                                            }
+                                                        });
+                                                    },
+                                                    failure: function(response) {
+                                                        translatingWindow.destroy();
+                                                        quickTranslatecreateWindow("Error", "We couldn't translate your brick. Either the brick is too large or you have a malformed structure!");
+                                                    }
+                                                });
+                                            };
+
+                                            deeplAjax(settings);
                                         }
 
-                                    },
+                                        tempWrapper.remove();
 
-                                    failure: function () {
+                                    } else {
                                         elementsWindow.destroy();
-                                        quickTranslatecreateWindow("Error", "We encountered an error while processing your content for translation. Internal server error.");
+                                        quickTranslatecreateWindow("Empty brick", "We couldn't translate your brick beacuse it is empty!");
                                     }
-
-                                });
-
-                            }).fail(function () {
-
-                                var status = response.status;
-
-                                /* creates popup with error message depending on failed request status from deepl */
-                                switch (status) {
-                                    case 403:
-                                        quickTranslatecreateWindow("Authorization failed", "Please insert a valid DeepL authentication key.");
-                                        break;
-                                    case 456:
-                                        quickTranslatecreateWindow("Quota exceeded", "You have reached your character limit.");
-                                        break;
-                                    case 429:
-                                        quickTranslatecreateWindow("Too many requests", "Please wait a few minutes before translating your document again.");
-                                        break;
-                                    default:
-                                        quickTranslatecreateWindow("Connection error", "There seems to be a problem connecting to the DeepL service. Try again later.");
-                                        break;
+                                } else {
+                                    elementsWindow.destroy();
+                                    quickTranslatecreateWindow("Unsuported language", "We couldn't translate your brick beacuse it is in a language not supported by DeepL!");
                                 }
 
-                            });
-                        } else {
-                            quickTranslatecreateWindow("Missing authentication key", "Please insert your DeepL authentication key in the Pimcore website settings!");
-                        }
+                            },
+
+                            failure: function () {
+                                elementsWindow.destroy();
+                                quickTranslatecreateWindow("Error", "We encountered an error while processing your content for translation. Internal server error.");
+                            }
+
+                        });
                     },
 
-                    failure: function () {
-                        quickTranslatecreateWindow("Connection error", "We encountered an error while checking for your DeepL authentication key. Internal server error.");
+                    failure: function(response) {
+
+                        var status = response.status;
+
+                        /* creates popup with error message depending on failed request status from deepl */
+                        switch (status) {
+                            case 403:
+                                quickTranslatecreateWindow("Authorization failed", "Please insert a valid DeepL authentication key.");
+                                break;
+                            case 456:
+                                quickTranslatecreateWindow("Quota exceeded", "You have reached your character limit.");
+                                break;
+                            case 429:
+                                quickTranslatecreateWindow("Too many requests", "Please wait a few minutes before translating your document again.");
+                                break;
+                            default:
+                                quickTranslatecreateWindow("Connection error", "There seems to be a problem connecting to the DeepL service. Try again later.");
+                                break;
+                        }
                     }
                 });
-
-
             }.bind(this, element)
         });
+
 
         //visibility buttons
         visibilityButtons = this.visibilityButtons[element.key];

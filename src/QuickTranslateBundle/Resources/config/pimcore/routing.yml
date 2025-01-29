@@ -18,11 +18,14 @@ asioso_quick_translate_check_if_exists:
     path:     /asioso_quick_translate_check_if_exists
     controller: Asioso\QuickTranslateBundle\Controller\DocumentController::checkIfExistsAction
 
-asioso_quick_translate_get_auth_key:
-    path:     /asioso_quick_translate_get_auth_key
-    controller: Asioso\QuickTranslateBundle\Controller\DefaultController::getAuthKeyAction
+#asioso_quick_translate_get_auth_key:
+#    path:     /asioso_quick_translate_get_auth_key
+#    controller: Asioso\QuickTranslateBundle\Controller\DefaultController::getAuthKeyAction
 
 asioso_quick_translate_get_glossaries:
     path: /asioso_quick_translate_get_glossaries
     controller: Asioso\QuickTranslateBundle\Controller\DefaultController::getGlossariesAction
 
+asioso_quick_translate_text:
+    path: /asioso_quick_translate_text
+    controller: Asioso\QuickTranslateBundle\Controller\DefaultController::translate

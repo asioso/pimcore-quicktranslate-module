@@ -70,16 +70,26 @@ pimcore.plugin.asiosoQuickTranslateBundle = Class.create({
 
 
     docBtn: function (document) {
-
         var menuParent;
+
+        var toolbarItems = document.toolbar.items.items;
+
+        var menuButton = toolbarItems.find(item => {
+            return (
+                item.btnInnerEl?.component?.menu?.items?.items &&
+                item.btnInnerEl.component.menu.items.items[0]?.menu
+            );
+        });
+
+        if (!menuButton) {
+            console.error("Menu button not found.");
+            return;
+        }
+
         if (document.data.locked) {
-            menuParent = document.toolbar.items.items[6].btnInnerEl.component.menu.items.items[0].menu;
+            menuParent = menuButton.btnInnerEl.component.menu.items.items[0].menu;
         } else {
-            if(document.data.id == 1 ){
-                menuParent = document.toolbar.items.items[7].btnInnerEl.component.menu.items.items[0].menu;
-            }else{
-                menuParent = document.toolbar.items.items[9].btnInnerEl.component.menu.items.items[0].menu;
-            } 
+            menuParent = menuButton.btnInnerEl.component.menu.items.items[0].menu;
         }
 
         menuParent.add({
@@ -87,7 +97,7 @@ pimcore.plugin.asiosoQuickTranslateBundle = Class.create({
             iconCls: 'quick-translate-icon',
             scale: 'small',
             handler: function () {
-                quickTranslateDocument(document)
+                quickTranslateDocument(document);
             }
         });
     }
