@@ -248,8 +248,8 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                                         "Content-Type": "application/json"
                                                     },
                                                     success: function(response) {
-
-                                                        translatedParts.push(response.translations[0].text);
+                                                        var responseText = Ext.decode(response.responseText);
+                                                        translatedParts.push(responseText.translations[0].text);
                                                         progressBar[0].updateProgress(translatedParts.length / partsToTranslate.length, "Translating: " + translatedParts.length + " of " + partsToTranslate.length);
                                                     },
                                                     failure: function(response) {
@@ -380,9 +380,9 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                                         "Content-Type": "application/json"
                                                     },
                                                     success: function(response) {
-                                                        var response = Ext.decode(response.responseText);
+                                                        var responseText = Ext.decode(response.responseText);
 
-                                                        elems = xmlToJson(response.translations[0].text, srcSet, true);
+                                                        elems = xmlToJson(responseText.translations[0].text, srcSet, true);
 
                                                         translatingWindow.destroy();
 
