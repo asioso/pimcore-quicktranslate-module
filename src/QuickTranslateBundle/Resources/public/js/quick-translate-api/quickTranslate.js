@@ -7,17 +7,9 @@
  *
  */
 
-function quickTranslate(key, type, data,srcSet = null,langFrom, langTo, id,successCallback, failCallback) {
+function quickTranslate(data,srcSet = null,langFrom, langTo, id,successCallback, failCallback) {
 
-    var url = createDeeplApiUrl(key, type, data, langFrom, langTo);
-
-    var settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": url,
-        "method": "GET",
-        "headers": {},
-    };
+    var settings = createDeeplApiSettings(data, langFrom, langTo);
 
     var translatingWindow = quickTranslatecreateWindow("Translating", "Translating your content, please wait...");
 
