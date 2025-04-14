@@ -29,7 +29,7 @@ class ObjectController extends FrontendController
             $item = DataObject::getById($itemId);
 
             foreach ($data as $key => $value) {
-                if (str_contains($key, 'structuredData#')) {
+                if (str_contains($key, 'structuredData---')) {
                     list($prefix, $fieldName, $index, $type, $strField) = explode('.', $key);
 
                     $structuredField = $item->get($fieldName);
@@ -50,7 +50,7 @@ class ObjectController extends FrontendController
                         $localizedFields->setLocalizedValue($strField, $value, $localizedField);
                     }
 
-                } elseif (str_contains($key, 'classificationStore#')) {
+                } elseif (str_contains($key, 'classificationStore---')) {
                     list($prefix, $index, $fieldName, $strField) = explode('.', $key);
 
                     $structuredField = $item->get($fieldName);
