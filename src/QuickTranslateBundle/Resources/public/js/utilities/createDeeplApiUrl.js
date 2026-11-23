@@ -7,6 +7,20 @@
  *
  */
 
+/* CSRF token for jQuery requests to the Pimcore admin (Ext.Ajax sends it automatically) */
+function quickTranslateCsrfToken() {
+    try {
+        if (typeof pimcore !== "undefined" && pimcore.settings && pimcore.settings.csrfToken) {
+            return pimcore.settings.csrfToken;
+        }
+        if (window.parent && window.parent.pimcore && window.parent.pimcore.settings) {
+            return window.parent.pimcore.settings.csrfToken;
+        }
+    } catch (e) {
+    }
+    return "";
+}
+
 /* returns url for ajax request on deepls api */
 function createDeeplApiUrl(key, type, data, langFrom = null, langTo, autoDetect = false) {
 
@@ -27,7 +41,7 @@ function createDeeplApiUrl(key, type, data, langFrom = null, langTo, autoDetect 
     var glossaryId = null;
 
     Ext.Ajax.request({
-        url: "/asioso_quick_translate_get_glossaries",
+        url: "/admin/asioso_quick_translate_get_glossaries",
         async: false,
         success: function (response) {
             var data = Ext.decode(response.responseText);
@@ -76,7 +90,7 @@ function createDeeplApiSettings(data, langFrom = null, langTo, autoDetect = fals
     var glossaryId = null;
 
     Ext.Ajax.request({
-        url: "/asioso_quick_translate_get_glossaries",
+        url: "/admin/asioso_quick_translate_get_glossaries",
         async: false,
         success: function (response) {
             var data = Ext.decode(response.responseText);
@@ -113,10 +127,11 @@ function createDeeplApiSettings(data, langFrom = null, langTo, autoDetect = fals
 
     var settings = {
         "async": true,
-        "url": '/asioso_quick_translate_text',
+        "url": '/admin/asioso_quick_translate_text',
         "method": "POST",
         "headers": {
-            "Content-Type": "application/json" // Updated to JSON format
+            "Content-Type": "application/json", // Updated to JSON format
+            "X-pimcore-csrf-token": quickTranslateCsrfToken()
         },
         "data": JSON.stringify(body)
     };

@@ -341,8 +341,11 @@ pimcore.element.quickTranslateObjectBtn = Class.create({
     translateObject: function (id, locale, data) {
 
         var settings = {
-            url: "/asioso_quick_translate_object",
+            url: "/admin/asioso_quick_translate_object",
             method: 'POST',
+            headers: {
+                "X-pimcore-csrf-token": quickTranslateCsrfToken()
+            },
             data: {
                 id: id,
                 locale: locale,

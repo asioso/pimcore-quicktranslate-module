@@ -52,34 +52,25 @@ class DocumentController extends FrontendController
 
         $document = Document::getById($request->get("id"));
 
+        $sql = "SELECT name, type, data
+                FROM documents_editables
+                WHERE documentId = ? AND (type='input' OR type='textarea' OR type='wysiwyg')";
+        $params = [];
+
         if ($isBrick) {
-            $id = $document->getContentMainDocumentId() != null ? $document->getContentMainDocumentId() : $document->getId();
+            $sql .= " AND name LIKE ?";
+            $params[] = addcslashes((string) $request->get("brickName"), '\\%_') . '%';
+        }
 
-            $brickName = $request->get("brickName");
-            $elems = $db->fetchAllAssociative("SELECT name, type, data
-                                        FROM documents_editables
-                                        WHERE documentId=" . $document->getId() . " AND (type='input' OR type='textarea' OR type='wysiwyg') AND name LIKE '" . $brickName . "%'");
+        $elems = $db->fetchAllAssociative($sql, array_merge([$document->getId()], $params));
 
-            if ($elems == null && $document->getContentMainDocumentId() != null) {
-                $elems = $db->fetchAllAssociative("SELECT name, type, data
-                                        FROM documents_editables
-                                        WHERE documentId=" . $document->getContentMainDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg') AND name LIKE '" . $brickName . "%'");
-            }
+        if ($elems == null && $document->getContentMainDocumentId() != null) {
+            $elems = $db->fetchAllAssociative($sql, array_merge([$document->getContentMainDocumentId()], $params));
+        }
 
+        if ($isBrick) {
             $langTo = $document->getProperty("language");
             $type = $document->getType();
-
-        } else {
-
-            $elems = $db->fetchAllAssociative("SELECT name, type, data
-                                        FROM documents_editables
-                                        WHERE documentId=" . $request->get("id") . " AND (type='input' OR type='textarea' OR type='wysiwyg')");
-
-            if ($elems == null && $document->getContentMainDocumentId() != null) {
-                $elems = $db->fetchAllAssociative("SELECT name, type, data
-                                        FROM documents_editables
-                                        WHERE documentId=" . $document->getContentMainDocumentId() . " AND (type='input' OR type='textarea' OR type='wysiwyg')");
-            }
         }
 
         foreach ($elems as $element) {

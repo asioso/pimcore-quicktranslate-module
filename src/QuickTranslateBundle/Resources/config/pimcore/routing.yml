@@ -1,31 +1,41 @@
+# All routes are under /admin: the Pimcore admin firewall (login) and CSRF protection apply.
+# Write actions only accept POST, so the CSRF token is always checked.
+
 asioso_quick_translate_object:
-    path:     /asioso_quick_translate_object
+    path:     /admin/asioso_quick_translate_object
     controller: Asioso\QuickTranslateBundle\Controller\ObjectController::translateObjectAction
+    methods: [POST]
 
 asioso_quick_translate_document:
-    path:     /asioso_quick_translate_document
+    path:     /admin/asioso_quick_translate_document
     controller: Asioso\QuickTranslateBundle\Controller\DocumentController::saveDocumentAction
+    methods: [POST]
 
 asioso_quick_translate_brick:
-    path:     /asioso_quick_translate_brick
+    path:     /admin/asioso_quick_translate_brick
     controller: Asioso\QuickTranslateBundle\Controller\DocumentController::saveBrickAction
+    methods: [POST]
 
 asioso_quick_translate_get_document_elements:
-    path:     /asioso_quick_translate_get_document_elements
+    path:     /admin/asioso_quick_translate_get_document_elements
     controller: Asioso\QuickTranslateBundle\Controller\DocumentController::getDocumentElementsAction
+    methods: [GET]
 
 asioso_quick_translate_check_if_exists:
-    path:     /asioso_quick_translate_check_if_exists
+    path:     /admin/asioso_quick_translate_check_if_exists
     controller: Asioso\QuickTranslateBundle\Controller\DocumentController::checkIfExistsAction
+    methods: [GET]
 
 #asioso_quick_translate_get_auth_key:
-#    path:     /asioso_quick_translate_get_auth_key
+#    path:     /admin/asioso_quick_translate_get_auth_key
 #    controller: Asioso\QuickTranslateBundle\Controller\DefaultController::getAuthKeyAction
 
 asioso_quick_translate_get_glossaries:
-    path: /asioso_quick_translate_get_glossaries
+    path: /admin/asioso_quick_translate_get_glossaries
     controller: Asioso\QuickTranslateBundle\Controller\DefaultController::getGlossariesAction
+    methods: [GET]
 
 asioso_quick_translate_text:
-    path: /asioso_quick_translate_text
+    path: /admin/asioso_quick_translate_text
     controller: Asioso\QuickTranslateBundle\Controller\DefaultController::translate
+    methods: [POST]

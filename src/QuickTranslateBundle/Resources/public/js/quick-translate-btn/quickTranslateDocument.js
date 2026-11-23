@@ -156,7 +156,7 @@ function quickTranslateDocument(documentTranslate) {
 
                                     /* checks if the document you want to create already exists */
                                     Ext.Ajax.request({
-                                        url: "/asioso_quick_translate_check_if_exists",
+                                        url: "/admin/asioso_quick_translate_check_if_exists",
                                         params: {
                                             key: params["key"],
                                             parentId: res["id"]
@@ -175,7 +175,7 @@ function quickTranslateDocument(documentTranslate) {
 
                                                 /* get all editables of the document */
                                                 Ext.Ajax.request({
-                                                    url: "/asioso_quick_translate_get_document_elements",
+                                                    url: "/admin/asioso_quick_translate_get_document_elements",
                                                     method: 'GET',
                                                     params: {
                                                         id: documentTranslate.id
@@ -271,7 +271,7 @@ function quickTranslateDocument(documentTranslate) {
                                                                             progressBar[0].updateProgress(100, "Saving");
 
                                                                             Ext.Ajax.request({
-                                                                                url: "/asioso_quick_translate_document",
+                                                                                url: "/admin/asioso_quick_translate_document",
                                                                                 method: 'POST',
                                                                                 params: params,
 
@@ -326,7 +326,7 @@ function quickTranslateDocument(documentTranslate) {
                                                                         var savingWindow = quickTranslatecreateWindow("Saving", "Saving your translated document...");
 
                                                                         Ext.Ajax.request({
-                                                                            url: "/asioso_quick_translate_document",
+                                                                            url: "/admin/asioso_quick_translate_document",
                                                                             method: 'POST',
                                                                             params: params,
                                                                             success: function (response) {
