@@ -36,7 +36,7 @@ With DeepL the following languages can currently be translated:
 ## Prerequisites
 * PHP 8.1 or higher (https://secure.php.net/)
 * Composer (https://getcomposer.org/download/)
-* A Pimcore  Installation (v11 or higher)
+* A Pimcore installation (v11 or v12)
 * DeepL account
 
 
