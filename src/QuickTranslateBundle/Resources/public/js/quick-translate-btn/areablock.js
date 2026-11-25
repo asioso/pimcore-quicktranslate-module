@@ -162,7 +162,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                 var checkerSettings = createDeeplApiSettings("translate", "DE", "EN");
 
                 Ext.Ajax.request({
-                    url: '/asioso_quick_translate_text',
+                    url: '/admin/asioso_quick_translate_text',
                     method: 'POST',
                     params: checkerSettings.data,
                     headers: {
@@ -173,7 +173,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                         var elementsWindow = quickTranslatecreateWindow("Processing", "Getting your content ready for translation...");
 
                         Ext.Ajax.request({
-                            url: "/asioso_quick_translate_get_document_elements",
+                            url: "/admin/asioso_quick_translate_get_document_elements",
                             method: 'GET',
                             params: {
                                 id: documentId,
@@ -241,7 +241,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                                 var settings = createDeeplApiSettings(partsToTranslate[i], null, langTo, true);
 
                                                 Ext.Ajax.request({
-                                                    url: '/asioso_quick_translate_text',
+                                                    url: '/admin/asioso_quick_translate_text',
                                                     method: 'POST',
                                                     params: settings.data,
                                                     headers: {
@@ -308,7 +308,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                                         progressBar[0].updateProgress(100, "Saving");
 
                                                         Ext.Ajax.request({
-                                                            url: "/asioso_quick_translate_brick",
+                                                            url: "/admin/asioso_quick_translate_brick",
                                                             method: 'POST',
                                                             params: {
                                                                 id: documentId,
@@ -373,7 +373,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                                 var translatingWindow = quickTranslatecreateWindow("Translating", "Translating your brick...");
 
                                                 Ext.Ajax.request({
-                                                    url: '/asioso_quick_translate_text',
+                                                    url: '/admin/asioso_quick_translate_text',
                                                     method: 'POST',
                                                     params: settings.data,
                                                     headers: {
@@ -389,7 +389,7 @@ pimcore.document.editables.areablock = Class.create(pimcore.document.editables.a
                                                         var savingWindow = quickTranslatecreateWindow("Saving", "Saving your translated brick...");
 
                                                         Ext.Ajax.request({
-                                                            url: "/asioso_quick_translate_brick",
+                                                            url: "/admin/asioso_quick_translate_brick",
                                                             method: 'POST',
                                                             params: {
                                                                 id: documentId,
